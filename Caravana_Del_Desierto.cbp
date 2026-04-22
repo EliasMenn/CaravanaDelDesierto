@@ -31,11 +31,27 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="headers/dado.h" />
+		<Unit filename="headers/cola/ColaDinamica.h" />
+		<Unit filename="headers/dado/dado.h" />
+		<Unit filename="headers/jugador/jugador.h" />
+		<Unit filename="headers/listaCDE/listaCDE.h" />
+		<Unit filename="headers/tablero/tablero.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sources/dado.c">
+		<Unit filename="sources/cola/ColaDinamica.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/dado/dado.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/jugador/jugador.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/listaCDE/listaCDE.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/tablero/tablero.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions />

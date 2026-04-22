@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#include "headers/dado.h"
+#include "headers/dado/dado.h"
 
 int main()
 {

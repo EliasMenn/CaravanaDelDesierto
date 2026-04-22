@@ -12,3 +12,47 @@
 	<time.h>
 	"headers/dado.h"
 
+1776888885 source:c:\users\usuario\documents\github\caravanadeldesierto\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"headers/dado/dado.h"
+
+1776892080 c:\users\usuario\documents\github\caravanadeldesierto\headers\dado\dado.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
+1776888950 source:c:\users\usuario\documents\github\caravanadeldesierto\sources\dado\dado.c
+	"../../headers/dado/dado.h"
+
+1776889135 source:c:\users\usuario\documents\github\caravanadeldesierto\sources\listacde\listacde.c
+	"../../headers/listaCDE/listaCDE.h"
+
+1776891641 source:c:\users\usuario\documents\github\caravanadeldesierto\sources\jugador\jugador.c
+	"../../headers/jugador/jugador.h"
+
+1776891517 c:\users\usuario\documents\github\caravanadeldesierto\headers\jugador\jugador.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1776888348 c:\users\usuario\documents\github\caravanadeldesierto\headers\listacde\listacde.h
+	<stdio.h>
+	<stdlib.h>
+
+1776891430 source:c:\users\usuario\documents\github\caravanadeldesierto\sources\tablero\tablero.c
+	"../../headers/tablero/tablero.h"
+
+1776891600 c:\users\usuario\documents\github\caravanadeldesierto\headers\tablero\tablero.h
+	<stdio.h>
+	<stdlib.h>
+
+1776892024 source:c:\users\usuario\documents\github\caravanadeldesierto\sources\cola\coladinamica.c
+	"../../headers/cola/ColaDinamica.h"
+
+1776892024 c:\users\usuario\documents\github\caravanadeldesierto\headers\cola\coladinamica.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
