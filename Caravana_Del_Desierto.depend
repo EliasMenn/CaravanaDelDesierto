@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1776800157 source:c:\users\user\desktop\caravana del desierto\caravana_del_desierto\sources\dado.c
+	"../headers/dado.h"
+
+1776800157 c:\users\user\desktop\caravana del desierto\caravana_del_desierto\headers\dado.h
+	<stdio.h>
+	<stdlib.h>
+
+1776800194 source:c:\users\user\desktop\caravana del desierto\caravana_del_desierto\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"headers/dado.h"
+
