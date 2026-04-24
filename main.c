@@ -6,6 +6,8 @@ int main()
     int dado = tirar_dado(6);
     printf("%d\n", dado);
     return 0;
+
+
 }
 
 ///TESTEOS

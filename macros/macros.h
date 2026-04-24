@@ -7,6 +7,8 @@
 #define ARCH_JUGADORES "jugadores2.bin"
 #define DUPLICADO 0
 #define NO_EXISTE_ARCHIVO -1
+#define ERROR_MEM 51
+#define LISTA_VACIA 61
 //menu.h
 #define OPCIONES_MENU_PRINCIPAL "1234"
 #define MENSAJE_MENU_PRINCIPAL \
