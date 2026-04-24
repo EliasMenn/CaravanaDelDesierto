@@ -1,15 +1,15 @@
 #include "../headers/menu.h"
 
-//muestra el men� y devuelve la opci�n elegida
+//muestra el menu y devuelve la opcion elegida
 char menuPrincipal(const char *mensaje, const char *opciones){
     char opc;
 
     puts(mensaje);
-    printf("\nSeleccione una opci�n: ");
+    printf("\nSeleccione una opcion: ");
     fflush(stdin);
     scanf("%c", &opc);
     while(strchr(opciones, opc) == NULL){
-        printf("Error! Opci�n no v�lida. Intente nuevamente: ");
+        printf("Error! Opcion no valida. Intente nuevamente: ");
         fflush(stdin);
         scanf("%c", &opc);
     }

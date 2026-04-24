@@ -32,10 +32,19 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="headers/dado.h" />
+		<Unit filename="headers/jugador.h" />
+		<Unit filename="headers/menu.h" />
+		<Unit filename="macros/macros.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/dado.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/jugador.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions />
