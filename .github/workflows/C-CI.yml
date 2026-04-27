@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  Test:
     runs-on: [self-hosted, linux]
 
     steps:
@@ -42,6 +42,10 @@ jobs:
       - name: Limpiar
         run: git clean -fdx
 
+  Test_Valgrind:
+    runs-on: [self-hosted, linux]
+    needs: Test
+    steps:
       - name: ReCompilar
         run: |
           gcc -Wall -Wextra -std=c11 \
@@ -61,8 +65,13 @@ jobs:
             --error-exitcode=1 \
             ./program test
 
-      - name: Discord notification
-        if: always()
+  Notificar:
+    runs-on: [self-hosted, linux]
+    needs: Test_Valgrind
+    if: always()
+
+    steps:
+      - name: Notificar
         run: |
           if [ "${{ job.status }}" = "success" ]; then
             COLOR=65280
@@ -81,7 +90,7 @@ jobs:
               \"title\": \"CI Result\",
               \"description\": \"${EMOJI} Build ${STATUS} for ${{ github.repository }}\",
               \"color\": ${COLOR},
-              \"fields\": [
+            \"fields\": [
                 {
                   \"name\": \"Branch\",
                   \"value\": \"${{ github.ref_name }}\"
@@ -91,6 +100,6 @@ jobs:
                   \"value\": \"${{ github.sha }}\"
                 }
               ]
-            }]
+          }]
           }" \
           ${{ secrets.DISCORD_INTEGRATION}}
