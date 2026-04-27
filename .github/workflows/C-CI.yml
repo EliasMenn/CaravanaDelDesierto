@@ -97,4 +97,4 @@ jobs:
               ]
             }]
           }" \
-          ${{ secrets.DISCORD_WEBHOOK_URL }}
+          ${{ secrets.DISCORD_INTEGRATION}}
