@@ -31,5 +31,5 @@ int jugadorExiste(int id,const char* archJugadores)///LOGICA PROVISORIA, CUANDO 
     }
 
     fclose(pf);
-    return 1;  // no existe
+    return NO_EXISTE;  // no existe
 }

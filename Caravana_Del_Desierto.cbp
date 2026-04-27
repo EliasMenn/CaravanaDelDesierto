@@ -31,15 +31,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="headers/ListaDoEnCi.h" />
 		<Unit filename="headers/dado.h" />
 		<Unit filename="headers/jugador.h" />
 		<Unit filename="headers/menu.h" />
 		<Unit filename="macros/macros.h" />
 		<Unit filename="main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sources/ListaDoEnCi.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/dado.c">
@@ -51,6 +47,13 @@
 		<Unit filename="sources/menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="tests/sources/test_jugadores.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tests/tests.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tests/tests.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

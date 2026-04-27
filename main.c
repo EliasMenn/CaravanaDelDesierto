@@ -1,16 +1,17 @@
 #include "headers/jugador.h"
 #include "headers/menu.h"
 #include "headers/dado.h"
+
+
 int main()
 {
-    int dado = tirar_dado(6);
-    printf("%d\n", dado);
     return 0;
 }
 
 ///TESTEOS
 
 /*
+    tJugador jugador;
     jugador=(tJugador){1,"Malcom",26611};
 
     menuPrincipal(MENSAJE_MENU_PRINCIPAL,OPCIONES_MENU_PRINCIPAL);
