@@ -140,21 +140,103 @@ int quiUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
 //Operaciones de consulta
 int verPrimListDobCirc(const tListaDobCirc *pLista, void *dato, size_t tam)
 {
+    if(!(*pLista))
+        return LISTA_VACIA;
+    memcpy(dato,(*pLista)->info,MIN(tam,(*pLista)->tamInfo));
     return EXITO;
 }
 int verUltListDobCirc(const tListaDobCirc *pLista, void *dato,size_t tam)
 {
+    if(!(*pLista))
+        return LISTA_VACIA;
+    memcpy(dato,(*pLista)->ant->info,MIN((*pLista)->ant->tamInfo,tam));
     return EXITO;
 }
 //Operaciones de ordenamiento
-int ordListDobCirc(tListaDobCirc *pLista, int (*comparar)(const void *, const void *))
+int InsOrdListDobCirc(tListaDobCirc *pLista,void * dato, unsigned tam, int cmp(const void* dato1,const void* dato2))
 {
+    tNodoDob *nue, *act, *ant;
+    int comp;
+
+    if(!pLista)
+        return NO_EXISTE;
+
+    nue = (tNodoDob*)malloc(sizeof(tNodoDob));
+    if(!nue)
+        return ERROR_MEM;
+
+    nue->info = malloc(tam);
+    if(!nue->info)
+    {
+        free(nue);
+        return ERROR_MEM;
+    }
+
+    memcpy(nue->info, dato, tam);
+    nue->tamInfo = tam;
+
+    if(!*pLista)
+    {
+        nue->sig = nue;
+        nue->ant = nue;
+        *pLista = nue;
+        return EXITO;
+    }
+
+    act=*pLista;
+    ant=(*pLista)->ant;
+    do
+    {
+        comp = cmp(dato, act->info);
+
+        if(comp==0)
+        {
+            free(nue->info);
+            free(nue);
+            return DUPLICADO;
+        }
+
+        if(comp>0)
+        {
+            ant=act;
+            act=act->sig;
+        }
+    } while(act!=*pLista && comp>0);
+
+    nue->sig=act;
+    nue->ant=ant;
+    ant->sig=nue;
+    act->ant=nue;
+
+    if(act==*pLista && comp<0)
+        *pLista=nue;
+
     return EXITO;
 }
 //Operaciones de eliminación
-void vaciarListDobCirc(tListaDobCirc *pLista)
-{}
-int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam, int (*comparar)(const void *, const void *))
+void VaciarListaDobCirc(tListaDobCirc *pLista)
+{
+    tNodoDob *elim;
+    tNodoDob *aux;
+
+    if (!*pLista)
+        return;
+    
+    elim = (*pLista)->sig; // Empezamos desde el nodo siguiente a la cabecera
+    
+    while (elim!=*pLista )// Iteramos mientras no demos una vuelta completa
+    {
+        aux = elim->sig;
+        free(elim->info);      
+        free(elim);               
+        elim = aux;            
+    }
+    free((*pLista)->info); //Liberamos la cabecera
+    free(*pLista);
+    *pLista = NULL;
+}
+
+int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam, int cmp(const void * dato1, const void *dato2))
 {
     return EXITO;
-}  
+}

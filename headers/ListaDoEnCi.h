@@ -26,8 +26,8 @@ int quiUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam);
 int verPrimListDobCirc(const tListaDobCirc *pLista, void *dato, size_t tam);
 int verUltListDobCirc(const tListaDobCirc *pLista, void *dato,size_t tam);
 //Operaciones de ordenamiento
-int ordListDobCirc(tListaDobCirc *pLista, int (*comparar)(const void *, const void *));
+int InsOrdListDobCirc(tListaDobCirc *pLista,void * dato, unsigned tam, int cmp(const void* dato1,const void* dato2));
 //Operaciones de eliminación
 void vaciarListDobCirc(tListaDobCirc *pLista);
-int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam, int (*comparar)(const void *, const void *));
+int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam,  int cmp(const void * dato1, const void *dato2));
 #endif // LISTADOENCI_H_INCLUDED

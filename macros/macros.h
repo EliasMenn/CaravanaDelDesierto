@@ -31,6 +31,7 @@
 #define SALIR '4'
 #define CANT_OPCIONES_MENU_PRINCIPAL 4
 
-//dado.h
+//ListaDoEnCi.h
+#define MIN(x,y) (x)>(y)?(y):(x)
 
 #endif //MACROS_H_INCLUDED
