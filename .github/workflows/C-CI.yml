@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  Test:
     runs-on: [self-hosted, linux]
 
     steps:
@@ -42,55 +42,63 @@ jobs:
       - name: Limpiar
         run: git clean -fdx
 
-      - name: ReCompilar
-        run: |
-          gcc -Wall -Wextra -std=c11 \
-          -Iheaders \
-          -Imacros \
-          main.c \
-          sources/*.c \
-          tests/*.c \
-          tests/sources/*.c \
-          -o program
+  Test_Valgrind:
+    runs-on: [self-hosted, linux]
+  
+  needs: Test
+  
+  steps:
 
-      - name: Chequeo Memoria
-        run: |
-          valgrind --leak-check=full \
-            --show-leak-kinds=all \
-            --track-origins=yes \
-            --error-exitcode=1 \
-            ./program test
+    - name: ReCompilar
+      run: |
+        gcc -Wall -Wextra -std=c11 \
+        -Iheaders \
+        -Imacros \
+        main.c \
+        sources/*.c \
+        tests/*.c \
+        tests/sources/*.c \
+        -o program
 
-      - name: Discord notification
-        if: always()
-        run: |
-          if [ "${{ job.status }}" = "success" ]; then
-            COLOR=65280
-            STATUS="SUCCESS"
-            EMOJI="✅"
-          else
-            COLOR=16711680
-            STATUS="FAILED"
-            EMOJI="❌"
-          fi
+    - name: Chequeo Memoria
+      run: |
+        valgrind --leak-check=full \
+          --show-leak-kinds=all \
+          --track-origins=yes \
+          --error-exitcode=1 \
+          ./program test
 
-          curl -H "Content-Type: application/json" \
-          -X POST \
-          -d "{
-            \"embeds\": [{
-              \"title\": \"CI Result\",
-              \"description\": \"${EMOJI} Build ${STATUS} for ${{ github.repository }}\",
-              \"color\": ${COLOR},
-              \"fields\": [
-                {
-                  \"name\": \"Branch\",
-                  \"value\": \"${{ github.ref_name }}\"
-                },
-                {
-                  \"name\": \"Commit\",
-                  \"value\": \"${{ github.sha }}\"
-                }
-              ]
-            }]
-          }" \
-          ${{ secrets.DISCORD_INTEGRATION}}
+  Notificar:
+    needs: Test_Valgrind
+    if: always()
+    run: |
+      if [ "${{ job.status }}" = "success" ]; then
+        COLOR=65280
+        STATUS="SUCCESS"
+        EMOJI="✅"
+      else
+        COLOR=16711680
+        STATUS="FAILED"
+        EMOJI="❌"
+      fi
+
+      curl -H "Content-Type: application/json" \
+      -X POST \
+      -d "{
+        \"embeds\": [{
+          \"title\": \"CI Result\",
+          \"description\": \"${EMOJI} Build ${STATUS} for ${{ github.repository }}\",
+          \"color\": ${COLOR},
+          \"fields\": [
+            {
+              \"name\": \"Branch\",
+              \"value\": \"${{ github.ref_name }}\"
+            },
+            {
+              \"name\": \"Commit\",
+              \"value\": \"${{ github.sha }}\"
+            }
+          ]
+        }]
+      }" \
+      ${{ secrets.DISCORD_INTEGRATION}}
