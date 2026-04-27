@@ -46,7 +46,7 @@ jobs:
       - name: Restaurar Snapshot
         run: |
           rm -rf .
-          cp -r ../clean_snapshot/. .
+          cp -r ../clean_snapshot/* .
 
       - name: Chequeo Memoria
         run: |
