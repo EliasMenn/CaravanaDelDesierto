@@ -43,10 +43,19 @@ jobs:
       - name: Correr programa
         run: ./program test
 
-      - name: Restaurar Snapshot
+      - name: Limpiar
+        run: git clean -fdx
+
+      - name: ReCompilar
         run: |
-          rm -rf .
-          cp -r ../clean_snapshot/* .
+          gcc -Wall -Wextra -std=c11 \
+          -Iheaders \
+          -Imacros \
+          main.c \
+          sources/*.c \
+          tests/*.c \
+          tests/sources/*.c \
+          -o program
 
       - name: Chequeo Memoria
         run: |
@@ -56,16 +65,36 @@ jobs:
             --error-exitcode=1 \
             ./program test
 
-      - name: Discord embed
+      - name: Discord notification
         if: always()
         run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            COLOR=65280
+            STATUS="SUCCESS"
+            EMOJI="✅"
+          else
+            COLOR=16711680
+            STATUS="FAILED"
+            EMOJI="❌"
+          fi
+
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d '{
-            "embeds": [{
-              "title": "CI Result",
-              "description": "Build finished for ${{ github.repository }}",
-              "color": 65280
+          -d "{
+            \"embeds\": [{
+              \"title\": \"CI Result\",
+              \"description\": \"${EMOJI} Build ${STATUS} for ${{ github.repository }}\",
+              \"color\": ${COLOR},
+              \"fields\": [
+                {
+                  \"name\": \"Branch\",
+                  \"value\": \"${{ github.ref_name }}\"
+                },
+                {
+                  \"name\": \"Commit\",
+                  \"value\": \"${{ github.sha }}\"
+                }
+              ]
             }]
-          }' \
-          ${{ secrets.DISCORD_INTEGRATION }}
+          }" \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
