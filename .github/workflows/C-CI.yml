@@ -71,34 +71,35 @@ jobs:
     if: always()
 
     steps:
-      run: |
-        if [ "${{ job.status }}" = "success" ]; then
-          COLOR=65280
-          STATUS="SUCCESS"
-          EMOJI="✅"
-        else
-          COLOR=16711680
-          STATUS="FAILED"
-          EMOJI="❌"
-        fi
+      - name: Notificar
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            COLOR=65280
+            STATUS="SUCCESS"
+            EMOJI="✅"
+          else
+            COLOR=16711680
+            STATUS="FAILED"
+            EMOJI="❌"
+          fi
 
-        curl -H "Content-Type: application/json" \
-        -X POST \
-        -d "{
-          \"embeds\": [{
-            \"title\": \"CI Result\",
-            \"description\": \"${EMOJI} Build ${STATUS} for ${{ github.repository }}\",
-            \"color\": ${COLOR},
-           \"fields\": [
-              {
-                \"name\": \"Branch\",
-                \"value\": \"${{ github.ref_name }}\"
-              },
-              {
-                \"name\": \"Commit\",
-                \"value\": \"${{ github.sha }}\"
-              }
-            ]
-         }]
-        }" \
-        ${{ secrets.DISCORD_INTEGRATION}}
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{
+            \"embeds\": [{
+              \"title\": \"CI Result\",
+              \"description\": \"${EMOJI} Build ${STATUS} for ${{ github.repository }}\",
+              \"color\": ${COLOR},
+            \"fields\": [
+                {
+                  \"name\": \"Branch\",
+                  \"value\": \"${{ github.ref_name }}\"
+                },
+                {
+                  \"name\": \"Commit\",
+                  \"value\": \"${{ github.sha }}\"
+                }
+              ]
+          }]
+          }" \
+          ${{ secrets.DISCORD_INTEGRATION}}
