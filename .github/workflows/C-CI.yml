@@ -46,7 +46,7 @@ jobs:
       - name: Restaurar Snapshot
         run: |
           rm -rf .
-          cp -r . ../clean_snapshot/*
+          cp -r ../clean_snapshot/. .
 
       - name: Chequeo Memoria
         run: |
@@ -55,3 +55,17 @@ jobs:
             --track-origins=yes \
             --error-exitcode=1 \
             ./program test
+
+      - name: Discord embed
+        if: always()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{
+            "embeds": [{
+              "title": "CI Result",
+              "description": "Build finished for ${{ github.repository }}",
+              "color": 65280
+            }]
+          }' \
+          ${{ secrets.DISCORD_INTEGRATION }}
