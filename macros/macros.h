@@ -4,11 +4,16 @@
 //jugador.h && algun otro .h
 #define ERROR_ARCHIVO 0 //el archivo fallo al abrirse
 #define EXITO 1
+
 #define ARCH_JUGADORES "jugadores2.bin"
-#define DUPLICADO 0
+#define DUPLICADO 10
+#define NO_EXISTE 11
+
 #define NO_EXISTE_ARCHIVO -1
+
 #define ERROR_MEM 51
 #define LISTA_VACIA 61
+
 //menu.h
 #define OPCIONES_MENU_PRINCIPAL "1234"
 #define MENSAJE_MENU_PRINCIPAL \

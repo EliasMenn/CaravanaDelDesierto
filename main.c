@@ -1,10 +1,16 @@
 #include "headers/jugador.h"
 #include "headers/menu.h"
 #include "headers/dado.h"
-int main()
+#include "tests/tests.h"
+
+
+int main(int argc, char *argv[])
 {
-    int dado = tirar_dado(6);
-    printf("%d\n", dado);
+    if (argc > 1 && strcmp(argv[1], "test") == 0)
+    {
+        return main_test();
+    }
+
     return 0;
 
 
@@ -13,6 +19,7 @@ int main()
 ///TESTEOS
 
 /*
+    tJugador jugador;
     jugador=(tJugador){1,"Malcom",26611};
 
     menuPrincipal(MENSAJE_MENU_PRINCIPAL,OPCIONES_MENU_PRINCIPAL);

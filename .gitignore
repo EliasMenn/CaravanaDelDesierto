@@ -37,5 +37,8 @@ Release/
 # Depend
 *.depend
 
+# Binaries
+*.bin
+
 # Make artifacts
 Makefile.old

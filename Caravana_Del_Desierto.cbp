@@ -47,6 +47,13 @@
 		<Unit filename="sources/menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="tests/sources/test_jugadores.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tests/tests.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tests/tests.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
