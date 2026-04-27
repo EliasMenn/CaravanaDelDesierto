@@ -3,8 +3,13 @@
 #include "headers/dado.h"
 
 
-int main()
+int main(int argc, char *argv[])
 {
+    if (argc > 1 && strcmp(argv[1], "test") == 0)
+    {
+        return main_test();
+    }
+
     return 0;
 }
 

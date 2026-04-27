@@ -34,4 +34,4 @@ jobs:
           -o program
 
       - name: Run program
-        run: ./program
+        run: ./program test
