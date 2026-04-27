@@ -1,0 +1,36 @@
+name: C CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "0 * * * *"   # every hour
+
+concurrency:
+  group: c-ci
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fix Windows include paths
+        run: |
+          find . \( -name "*.c" -o -name "*.h" \) -print0 | \
+          xargs -0 sed -i '/#include/s#\\#/#g'
+
+      - name: Compile
+        run: |
+          gcc -Wall -Wextra -std=c11 \
+          -Iheaders \
+          -Imacros \
+          sources/*.c main.c \
+          -o program
+
+      - name: Run program
+        run: ./program
