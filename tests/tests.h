@@ -5,5 +5,6 @@
 #include "../headers/dado.h"
 #include "../headers/menu.h"
 
+int main_test();
 int test_jugador();
 #endif // TESTS_H_INCLUDED

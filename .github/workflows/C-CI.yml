@@ -38,3 +38,11 @@ jobs:
 
       - name: Run program
         run: ./program test
+
+      - name: Memory check
+        run: |
+          valgrind --leak-check=full \
+            --show-leak-kinds=all \
+            --track-origins=yes \
+            --error-exitcode=1 \
+            ./program test
