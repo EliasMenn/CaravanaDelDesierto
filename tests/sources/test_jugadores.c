@@ -2,8 +2,10 @@
 
     int test_jugador()
     {
-        tJugador jugador;
-        jugador=(tJugador){1,"Malcom",26611};
+        tJugador jugador = {0};
+        jugador.id = 1;
+        strcpy(jugador.nombre, "Malcom");
+        jugador.dni = 26611;
         int res;
 
         printf("\nAgregamos un jugador nuevo");
@@ -21,7 +23,9 @@
         if(res != DUPLICADO)
             return 1;
 
-        jugador=(tJugador){2,"Reese",211};
+        jugador.id = 2;
+        strcpy(jugador.nombre, "Reese");
+        jugador.dni = 20611;
 
         printf("\nProbamos con otro jugador");
         res = jugadorExiste(jugador.id,ARCH_JUGADORES);
