@@ -1,6 +1,7 @@
 #include "headers/jugador.h"
 #include "headers/menu.h"
 #include "headers/dado.h"
+#include "tests/tests.h"
 
 
 int main(int argc, char *argv[])
