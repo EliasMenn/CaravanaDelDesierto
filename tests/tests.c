@@ -1,8 +1,8 @@
 #include "tests.h"
 
-int main_tests()
+int main()
 {
-    if(test_jugador == 1)
+    if(test_jugador() == 1)
         return 1;
     return 0;
 }

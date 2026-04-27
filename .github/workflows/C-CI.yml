@@ -30,7 +30,7 @@ jobs:
           gcc -Wall -Wextra -std=c11 \
           -Iheaders \
           -Imacros \
-          sources/*.c tests/tests.c \
+          sources/*.c tests/*.c \
           -o program
 
       - name: Run program
