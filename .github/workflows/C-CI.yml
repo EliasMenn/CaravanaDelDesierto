@@ -20,12 +20,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fix Windows include paths
+      - name: Arreglar Windows include paths
         run: |
           find . \( -name "*.c" -o -name "*.h" \) -print0 | \
           xargs -0 sed -i '/#include/s#\\#/#g'
 
-      - name: Compile
+      - name: Snapshot
+        run: |
+          cp -r . ../clean_snapshot
+
+      - name: Compilar
         run: |
           gcc -Wall -Wextra -std=c11 \
           -Iheaders \
@@ -36,10 +40,15 @@ jobs:
           tests/sources/*.c \
           -o program
 
-      - name: Run program
+      - name: Correr programa
         run: ./program test
 
-      - name: Memory check
+      - name: Restaurar Snapshot
+        run: |
+          rm -rf .
+          cp -r . ../clean_snapshot/*
+
+      - name: Chequeo Memoria
         run: |
           valgrind --leak-check=full \
             --show-leak-kinds=all \
