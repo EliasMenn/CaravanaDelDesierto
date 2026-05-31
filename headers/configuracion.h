@@ -1,6 +1,6 @@
 #ifndef CONFIGURACION_H_INCLUDED
 #define CONFIGURACION_H_INCLUDED
-
+#define
 typedef struct {
     int vidas_inicio;       // Vidas con las que inicia el jugador
     int puntos_premio;      // Puntos que otorga cada premio
