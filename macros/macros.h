@@ -8,7 +8,7 @@
 #define ARCH_JUGADORES "jugadores2.bin"
 #define DUPLICADO 10
 #define NO_EXISTE 11
-
+#define ARCH_CONFIG "config.txt"
 #define NO_EXISTE_ARCHIVO -1
 
 #define ERROR_MEM 51
@@ -34,4 +34,6 @@
 //ListaDoEnCi.h
 #define MIN(x,y) (x)>(y)?(y):(x)
 
+//configuracion.h
+#define MAX_LINEA 30
 #endif //MACROS_H_INCLUDED

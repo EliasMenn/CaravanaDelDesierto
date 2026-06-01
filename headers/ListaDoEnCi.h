@@ -5,12 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct sNodo
+typedef struct sNodoDob
 {
     void* info;
     size_t tamInfo;
-    struct sNodo* sig;
-    struct sNodo* ant;
+    struct sNodoDob* sig;
+    struct sNodoDob* ant;
 }tNodoDob;
 
 typedef tNodoDob* tListaDobCirc;

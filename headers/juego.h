@@ -1,13 +1,13 @@
 #ifndef JUEGO_H_INCLUDED
 #define JUEGO_H_INCLUDED
-#include "lista_circular.h"
+#include "ListaDoEnCi.h"
 #include "cola.h"
 #include "jugador.h"
-#include "partida.h" // Para poder generar el recibo al final
+#include "historicoPartidas.h" // Para poder generar el recibo al final
 
 typedef struct {
     tJugador jugador;       // Quién está jugando
-    tListaCircular* tablero;         // El tablero actual
+    tListaDobCirc* tablero;         // El tablero actual
     tCola* colaMovimientos;       // Historial de "FX"(Forward X casillas) y "BX" (Backward X casillas)
     int vidasActuales;            // Arranca en config.vidas_inicio
     int puntosActuales;           // Los premios que va agarrando

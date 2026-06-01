@@ -7,8 +7,9 @@
 #include "macros.h"
 
 typedef struct {
+    int id;
     char nombre[50];
-    int puntajeTotal;
+    int puntosTotales;
     int partidasJugadas;
 } tJugador;
 int guardarJugador(tJugador* jugador,const char* archJugadores);
