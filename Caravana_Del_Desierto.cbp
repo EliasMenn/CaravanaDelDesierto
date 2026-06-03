@@ -32,6 +32,7 @@
 			<Add option="-Wall" />
 			<Add directory="C:/Users/Usuario/Documents/GitHub/CaravanaDelDesierto/headers" />
 			<Add directory="C:/Users/Usuario/Documents/GitHub/CaravanaDelDesierto/macros" />
+			<Add directory="C:/Users/Usuario/Documents/GitHub/CaravanaDelDesierto/tests" />
 		</Compiler>
 		<Unit filename="headers/ListaDoEnCi.h" />
 		<Unit filename="headers/arbol.h" />

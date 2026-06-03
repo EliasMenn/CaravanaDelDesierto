@@ -36,4 +36,9 @@
 
 //configuracion.h
 #define MAX_LINEA 30
+
+//interfaz.h
+#define ARCH_CONFIG "config.txt"
+#define ARCH_CARAVANA "caravana.txt"
+#define ARCH_CONFIG_MAL_FORMADO 71
 #endif //MACROS_H_INCLUDED

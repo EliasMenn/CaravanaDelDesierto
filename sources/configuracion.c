@@ -24,36 +24,36 @@ int cargarConfiguracion(tConfig* config, const char* archConfig)
         *aux='\0';
     /** cant_tormentas*/
     aux=strrchr(linea,'|');
-    sscanf(aux+1,"%d",&config->maximo_tormentas);
+    sscanf(aux+1,"%d",&config->maximoTormentas);
     if(aux)
         *aux='\0';
     /** cant_oasis*/
     aux=strrchr(linea,'|');
-    sscanf(aux+1,"%d",&config->maximo_oasis);
+    sscanf(aux+1,"%d",&config->maximoOasis);
     if(aux)
         *aux='\0';
     /** cant_vidas_extras*/
     aux=strrchr(linea,'|');
-    sscanf(aux + 1,"%d",&config->maximo_vidas_extras);
+    sscanf(aux + 1,"%d",&config->maximoVidasExtras);
     if(aux)
         *aux='\0';
     /** cant_premios */
     aux=strrchr(linea,'|');
-    sscanf(aux + 1,"%d",&config->maximo_premios);
+    sscanf(aux + 1,"%d",&config->maximoPremios);
     if(aux)
         *aux='\0';
     /** cant_bandidos*/
     aux=strrchr(linea,'|');
-    sscanf(aux + 1,"%d",&config->maximo_bandidos);
+    sscanf(aux + 1,"%d",&config->maximoBandidos);
     if(aux)
         *aux='\0';
     /** cant_vidas_inicio*/
     aux=strrchr(linea,'|');
-    sscanf(aux + 1,"%d",&config->vidas_inicio);
+    sscanf(aux + 1,"%d",&config->vidasInicio);
     if(aux)
         *aux='\0';
     /** cant_posiciones*/
-    sscanf(linea,"%d",&config->cant_posiciones);
+    sscanf(linea,"%d",&config->cantPosiciones);
 
     free(linea);
     return 1;

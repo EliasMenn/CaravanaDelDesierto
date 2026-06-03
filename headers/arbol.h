@@ -12,7 +12,7 @@ typedef struct sNodoArbol
     struct sNodo* der;
 }tNodoArbol;
 
-typedef tNodo* tArbol;
+typedef tNodoArbol* tArbol;
 
 void crearArbol(tArbol* arbol);
 int insertarEnArbolRecursivo(tArbol* arbol,const void* dato,unsigned tam,int cmp(const void*,const void*));

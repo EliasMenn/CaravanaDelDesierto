@@ -3,7 +3,7 @@
 
 void crearLista(tListaDobCirc *pListaDobCirc)
 {
-    pListaDobCirc = NULL;
+    (*pListaDobCirc) = NULL;
 }
 //Operaciones al principio
 int insPrimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
@@ -221,15 +221,15 @@ void VaciarListaDobCirc(tListaDobCirc *pLista)
 
     if (!*pLista)
         return;
-    
+
     elim = (*pLista)->sig; // Empezamos desde el nodo siguiente a la cabecera
-    
+
     while (elim!=*pLista )// Iteramos mientras no demos una vuelta completa
     {
         aux = elim->sig;
-        free(elim->info);      
-        free(elim);               
-        elim = aux;            
+        free(elim->info);
+        free(elim);
+        elim = aux;
     }
     free((*pLista)->info); //Liberamos la cabecera
     free(*pLista);
@@ -239,4 +239,15 @@ void VaciarListaDobCirc(tListaDobCirc *pLista)
 int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam, int cmp(const void * dato1, const void *dato2))
 {
     return EXITO;
+}
+
+void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*))
+{
+
+    tNodoDob* fin=(*pLista)->ant;
+    while(*pLista!=fin)
+    {
+        accion((*pLista)->info);
+        pLista=&(*pLista)->sig;
+    }
 }

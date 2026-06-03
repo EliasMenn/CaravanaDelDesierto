@@ -5,13 +5,13 @@
 #include <string.h>
 #include "macros.h"
 typedef struct {
-    int cant_posiciones;
-    int vidas_inicio;
-    int maximo_bandidos;
-    int maximo_premios;
-    int maximo_vidas_extras;
-    int maximo_oasis;
-    int maximo_tormentas;
+    int cantPosiciones;
+    int vidasInicio;
+    int maximoBandidos;
+    int maximoPremios;
+    int maximoVidasExtras;
+    int maximoOasis;
+    int maximoTormentas;
  } tConfig;
 int cargarConfiguracion(tConfig* config, const char* archConfig);
 
