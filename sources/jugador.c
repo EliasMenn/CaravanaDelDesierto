@@ -19,7 +19,7 @@ int jugadorExiste(int id,const char* archJugadores)///LOGICA PROVISORIA, CUANDO 
     tJugador jugador;
     FILE* pf=fopen(archJugadores,"rb");
     if (!(pf))
-        return NO_EXISTE_ARCHIVO;
+        return ERROR_ARCHIVO;
 
     while(fread(&jugador, sizeof(tJugador), 1, pf) == 1)
     {
@@ -31,5 +31,5 @@ int jugadorExiste(int id,const char* archJugadores)///LOGICA PROVISORIA, CUANDO 
     }
 
     fclose(pf);
-    return NO_EXISTE;  // no existe
+    return 1;  // no existe
 }

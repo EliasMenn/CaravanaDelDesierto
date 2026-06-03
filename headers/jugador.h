@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "macros.h"
+#include "../macros/macros.h"
 
 typedef struct {
     int id;

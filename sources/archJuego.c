@@ -1,1 +1,1 @@
-#include "archJuego.h"
+#include "../headers/archJuego.h"

@@ -1,17 +1,29 @@
-#include "jugador.h"
-#include "menu.h"
-#include "dado.h"
-#include "tests.h"
-#include "interfaz.h"
+#include "headers/jugador.h"
+#include "headers/menu.h"
+#include "headers/dado.h"
+#include "tests/tests.h"
+#include "headers/interfaz.h"
 
+  void mostrarString(const void* datoLista)
+    {
+    char* auxDato=(char*)datoLista;
+
+    printf("[%c]\n",*auxDato);
+    }
 int main(int argc, char *argv[])
 {
-    if (argc > 1 && strcmp(argv[1], "test") == 0)
+    /*if (argc > 1 && strcmp(argv[1], "test") == 0)
     {
         return main_test();
     }
+    */
 
 
+    tListaDobCirc pldc;
+    tConfig config;
+    crearLista(&pldc);
+    creacionArchivoCaravana("caravana.txt",&pldc,&config);
+    recorrerListaDobCirc(&pldc,mostrarString);
 
     return 0;
 

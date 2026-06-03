@@ -1,5 +1,4 @@
-#include "interfaz.h"
-
+#include "../headers/interfaz.h"
 char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasExtras, int *cantOasis, int *cantTormentas, int *vacios, int restantes)
 {
     srand(time(NULL));
@@ -41,7 +40,7 @@ char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasEx
     }
     r -= *cantTormentas;
 
-    // Si no cayó en ninguno de los anteriores, es un espacio vacío
+    // Si no cayï¿½ en ninguno de los anteriores, es un espacio vacï¿½o
     (*vacios)--;
     return '.';
 }
@@ -58,7 +57,7 @@ int creacionArchivoCaravana(const char* archCaravana,tListaDobCirc* pldc,tConfig
     if(!cargarConfiguracion(configuracion,"config.txt"))
         return ERROR_ARCHIVO;
     if(configuracion->cantPosiciones<2) // solo tiene posicion para inicio y fin, no se puede jugar
-        return ARCH_CONFIG_MAL_FORMADO; //no se puede jugar
+        return ERROR_ARCH_MAL_FORMADO; //no se puede jugar
 
     /// carga de cantidades auxiliares
     cantPosiciones=configuracion->cantPosiciones -2 ;// eliminamos de la cuenta al inicio y al fin
@@ -72,7 +71,7 @@ int creacionArchivoCaravana(const char* archCaravana,tListaDobCirc* pldc,tConfig
     cantEspaciosVacios= cantPosiciones - cantEspeciales;
 
     if(cantEspaciosVacios <0)
-        return ARCH_CONFIG_MAL_FORMADO;
+        return ERROR_ARCH_MAL_FORMADO;
 
     pCaravana=fopen(archCaravana,"wt");
     if(!pCaravana)

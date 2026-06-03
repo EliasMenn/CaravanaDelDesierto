@@ -236,11 +236,6 @@ void VaciarListaDobCirc(tListaDobCirc *pLista)
     *pLista = NULL;
 }
 
-int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam, int cmp(const void * dato1, const void *dato2))
-{
-    return EXITO;
-}
-
 void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*))
 {
 
