@@ -30,15 +30,54 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="C:/Users/Usuario/Documents/GitHub/CaravanaDelDesierto/headers" />
+			<Add directory="C:/Users/Usuario/Documents/GitHub/CaravanaDelDesierto/macros" />
+			<Add directory="C:/Users/Usuario/Documents/GitHub/CaravanaDelDesierto/tests" />
 		</Compiler>
+		<Unit filename="headers/ListaDoEnCi.h" />
+		<Unit filename="headers/arbol.h" />
+		<Unit filename="headers/archJuego.h" />
+		<Unit filename="headers/bandidos.h" />
+		<Unit filename="headers/cola.h" />
+		<Unit filename="headers/configuracion.h" />
 		<Unit filename="headers/dado.h" />
+		<Unit filename="headers/historicoPartidas.h" />
+		<Unit filename="headers/interfaz.h" />
+		<Unit filename="headers/juego.h" />
 		<Unit filename="headers/jugador.h" />
 		<Unit filename="headers/menu.h" />
 		<Unit filename="macros/macros.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="sources/ListaDoEnCi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/arbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/archJuego.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/bandidos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/cola.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/configuracion.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="sources/dado.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/historicoPartidas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/interfaz.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/juego.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/jugador.c">

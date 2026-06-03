@@ -8,9 +8,11 @@
 #define ARCH_JUGADORES "jugadores2.bin"
 #define DUPLICADO 10
 #define NO_EXISTE 11
-
+#define ARCH_CONFIG "config.txt"
 #define NO_EXISTE_ARCHIVO -1
 
+#define ERROR_MEM 51
+#define LISTA_VACIA 61
 
 //menu.h
 #define OPCIONES_MENU_PRINCIPAL "1234"
@@ -29,6 +31,14 @@
 #define SALIR '4'
 #define CANT_OPCIONES_MENU_PRINCIPAL 4
 
-//dado.h
+//ListaDoEnCi.h
+#define MIN(x,y) (x)>(y)?(y):(x)
 
+//configuracion.h
+#define MAX_LINEA 30
+
+//interfaz.h
+#define ARCH_CONFIG "config.txt"
+#define ARCH_CARAVANA "caravana.txt"
+#define ARCH_CONFIG_MAL_FORMADO 71
 #endif //MACROS_H_INCLUDED

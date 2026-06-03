@@ -4,15 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../macros/macros.h"
+#include "macros.h"
 
-typedef struct
-{
+typedef struct {
     int id;
-    char nombre[51];
-    long long int puntosTotales;
-}tJugador;
-
+    char nombre[50];
+    int puntosTotales;
+    int partidasJugadas;
+} tJugador;
 int guardarJugador(tJugador* jugador,const char* archJugadores);
 int jugadorExiste(int id,const char* archJugadores);
 #endif // JUGADOR_H_INCLUDED

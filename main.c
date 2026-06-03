@@ -1,8 +1,8 @@
-#include "headers/jugador.h"
-#include "headers/menu.h"
-#include "headers/dado.h"
-#include "tests/tests.h"
-
+#include "jugador.h"
+#include "menu.h"
+#include "dado.h"
+#include "tests.h"
+#include "interfaz.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +11,11 @@ int main(int argc, char *argv[])
         return main_test();
     }
 
+
+
     return 0;
+
+
 }
 
 ///TESTEOS
@@ -36,4 +40,18 @@ int main(int argc, char *argv[])
         printf(" %d | %s | %lld\n",jugador.id,jugador.nombre,jugador.puntosTotales);
         fread(&jugador,sizeof(tJugador),1,pf);
     }
+
+    /// testeo creado de archivo caravana.txt
+    void mostrarString(const void* datoLista)
+    {
+    char* auxDato=(char*)datoLista;
+
+    printf("[%c]\n",*auxDato);
+    }
+
+    tListaDobCirc pldc;
+    tConfig config;
+    crearLista(&pldc);
+    creacionArchivoCaravana("caravana.txt",&pldc,&config);
+    recorrerListaDobCirc(&pldc,mostrarString);
 */
