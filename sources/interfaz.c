@@ -1,4 +1,4 @@
-#include "interfaz.h"
+#include "..\headers\interfaz.h"
 
 char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasExtras, int *cantOasis, int *cantTormentas, int *vacios, int restantes)
 {

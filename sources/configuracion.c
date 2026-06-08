@@ -1,4 +1,4 @@
-#include "configuracion.h"
+#include "..\headers\configuracion.h"
 
 int cargarConfiguracion(tConfig* config, const char* archConfig)
 {

@@ -1,8 +1,8 @@
-#include "jugador.h"
-#include "menu.h"
-#include "dado.h"
-#include "tests.h"
-#include "interfaz.h"
+#include "headers\jugador.h"
+#include "headers\menu.h"
+#include "headers\dado.h"
+#include "tests\tests.h"
+#include "headers\interfaz.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,10 +12,7 @@ int main(int argc, char *argv[])
     }
 
 
-
     return 0;
-
-
 }
 
 ///TESTEOS

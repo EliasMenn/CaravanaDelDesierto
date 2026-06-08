@@ -1,1 +1,1 @@
-#include "historicoPartidas.h"
+#include "..\headers\historicoPartidas.h"
