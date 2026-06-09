@@ -105,7 +105,7 @@ int insUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
     nue->ant=ult;
     ult->sig=nue;
     (*pLista)->ant=nue;
-    return EXITO;
+    return EXITO; // siempre queda el puntero al inicio para poder mostrarlo desde ahi
 }
 int quiUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
 {

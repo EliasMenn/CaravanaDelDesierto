@@ -41,7 +41,7 @@ char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasEx
     }
     r -= *cantTormentas;
 
-    // Si no cayó en ninguno de los anteriores, es un espacio vacío
+    // Si no cayï¿½ en ninguno de los anteriores, es un espacio vacï¿½o
     (*vacios)--;
     return '.';
 }
@@ -61,7 +61,7 @@ int creacionArchivoCaravana(const char* archCaravana,tListaDobCirc* pldc,tConfig
         return ARCH_CONFIG_MAL_FORMADO; //no se puede jugar
 
     /// carga de cantidades auxiliares
-    cantPosiciones=configuracion->cantPosiciones -2 ;// eliminamos de la cuenta al inicio y al fin
+    cantPosiciones=configuracion->cantPosiciones -2 ;// eliminamos de la cuenta al inicio (I:Inicio) y al fin (S:Salida)
     cantBandidos=configuracion->maximoBandidos;
     cantVidasExtras=configuracion->maximoVidasExtras;
     cantOasis=configuracion->maximoOasis;
@@ -97,4 +97,22 @@ int creacionArchivoCaravana(const char* archCaravana,tListaDobCirc* pldc,tConfig
     fprintf(pCaravana,"%02d:%c\n",posIterativa,caracterAInsertar);
     fclose(pCaravana);
     return 1;
+}
+
+
+void mostrarTablero(tListaDobCirc* tablero)
+{
+    tNodoDob* actual = *tablero;
+    int posicion = 1;
+
+    if (!actual) {
+        printf("El tablero estÃ¡ vacÃ­o.\n");
+        return;
+    }
+
+    do {
+        printf("%02d:%c\n", posicion, *(char*)(actual->info));
+        actual = actual->sig;
+        posicion++;
+    } while (actual != *tablero);
 }

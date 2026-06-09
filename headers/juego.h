@@ -3,8 +3,11 @@
 #include "ListaDoEnCi.h"
 #include "cola.h"
 #include "jugador.h"
-#include "historicoPartidas.h" // Para poder generar el recibo al final
-
+#include "arbol.h" // Para poder cargar el indice de jugadores a memoria
+#include "configuracion.h"
+#include "Indice.h"
+#include "archivos.h"
+#include "menu.h"
 typedef struct {
     tJugador jugador;       // Quién está jugando
     tListaDobCirc* tablero;         // El tablero actual
@@ -16,8 +19,9 @@ typedef struct {
     int perdioTurno;              // Bandera (1 o 0) si pisó Tormenta
 } tEstadoJuego;
 void iniciarJuego(tEstadoJuego* estado, const char* nombreJugador, const char* archTablero, const char* archJugadores);
-void mostrarTablero(tEstadoJuego* estado);
 void mostrarEstado(tEstadoJuego* estado);
 void realizarMovimiento(tEstadoJuego* estado, const char* movimiento);
 void finalizarJuego(tEstadoJuego* estado, const char* archJugadores, const char* archPartidas);
+void procesarInicioNuevaPartida(tListaDobCirc* tablero,tArbol* jugadores);
+void iniciarCaravanaDelDesierto();
 #endif // JUEGO_H_INCLUDED

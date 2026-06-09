@@ -4,6 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "..\macros\macros.h"
+
+typedef struct /// PROVISORIO, CUANDO TENGAMOS EL INDICE DEFINIDO LO MODIFICAMOS, ES PARA QUE NO TIRE ERROR LA FUNCION DE PROCESAR INICIO NUEVA PARTIDA
+{
+    void* clave;
+    int pos;
+}tIndice;
 typedef struct sNodoArbol
 {
     void* dato;

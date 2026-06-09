@@ -33,3 +33,11 @@ int jugadorExiste(int id,const char* archJugadores)///LOGICA PROVISORIA, CUANDO 
     fclose(pf);
     return NO_EXISTE;  // no existe
 }
+
+
+int BuscarNombreJugador(char* nombre,const tArbol* jugadores) ///LOGICA PROVISORIA, CUANDO VEAMOS INDICES SOBRE ARBOLES BINARIOS
+{
+
+    int result=buscarEnIndice(jugadores,nombre); //buscarEnIndice es una funcion que busca en el indice de jugadores (que esta cargado a memoria) el nombre del jugador y devuelve la posicion en donde se encuentra el nombre (si existe)
+    return result;
+}

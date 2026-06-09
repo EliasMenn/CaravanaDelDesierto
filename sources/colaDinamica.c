@@ -15,10 +15,27 @@ int colaVacia(const tCola* cola)
     return COLA_NO_VACIA;
 }
 
-/*int colaLlena(const tCola* cola, unsigned tamDato)
+int colaLlena(const tCola* cola, unsigned tamDato)
 {
 
-}*/
+    tNodo* aux = (tNodo*)malloc(sizeof(tNodo));
+
+    if(!aux)
+        return COLA_LLENA;
+
+    aux->dato = malloc(tamDato);
+
+    if(!aux->dato)
+    {
+        free(aux);
+        return COLA_LLENA;
+    }
+
+    free(aux->dato);
+    free(aux);
+
+    return COLA_NO_LLENA;
+}
 
 int aColar(tCola* cola, const void* dato, unsigned tam)
 {
