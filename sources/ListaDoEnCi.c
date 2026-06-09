@@ -241,13 +241,14 @@ int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam, int cmp(const
     return EXITO;
 }
 
-void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*))
+void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*, void*), void* contexto)
 {
 
     tNodoDob* fin=(*pLista)->ant;
     while(*pLista!=fin)
     {
-        accion((*pLista)->info);
+        accion((*pLista)->info, contexto);
         pLista=&(*pLista)->sig;
     }
+    accion((*pLista)->info, contexto);
 }

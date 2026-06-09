@@ -31,5 +31,5 @@ int InsOrdListDobCirc(tListaDobCirc *pLista,void * dato, unsigned tam, int cmp(c
 void vaciarListDobCirc(tListaDobCirc *pLista);
 int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam,  int cmp(const void * dato1, const void *dato2));
 //Operaciones de recorrido
-void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*));
+void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*, void*), void* contexto);
 #endif // LISTADOENCI_H_INCLUDED
