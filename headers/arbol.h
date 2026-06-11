@@ -6,7 +6,7 @@
 #include <string.h>
 #include "../macros/macros.h"
 
-#define TAM_NOMBRE 51 //si se usa pasar a la bibilioteca macros.h
+#define MAX(X, Y) ((X) > (Y) ? (X) : (Y))
 
 typedef struct sNodoArbol
 {
@@ -15,11 +15,6 @@ typedef struct sNodoArbol
     struct sNodoArbol* izq;
     struct sNodoArbol* der;
 }tNodoArbol;
-
-typedef struct{
-    char nombre[TAM_NOMBRE];
-    int reg;
-}tIndice;
 
 typedef tNodoArbol* tArbol;
 typedef int(*Cmp)(const void *n1, const void *n2);

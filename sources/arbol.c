@@ -206,11 +206,11 @@ int cargarArchivoBinarioOrdenadoArbol(char *nomArch, tArbol *a, unsigned tamDato
 
     //si el arbol tiene elementos, no se sobrescribe
     if(*a)
-        return ALL_OK;
+        return EXITO;
 
     archivo = fopen(nomArch, "rb");
     if(!archivo)
-        return ERR_ARCH;
+        return ERROR_ARCHIVO;
 
     resultado = cargarDesdeArchivoBinarioOrdenadoArbol(archivo, a, tamDato);
 
