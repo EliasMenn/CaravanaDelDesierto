@@ -24,28 +24,24 @@ typedef struct{
 typedef tNodoArbol* tArbol;
 typedef int(*Cmp)(const void *n1, const void *n2);
 
-/*void crearArbol(tArbol* arbol);
-int insertarEnArbolRecursivo(tArbol* arbol,const void* dato,unsigned tam,int cmp(const void*,const void*));
-int insertarEnArbol(tArbol* arbol,const void* dato,unsigned tam,int cmp(const void*,const void*));
-int _contarTodosLosNodos(tArbol* arbol,int nodosContados);
-void recorrerPreOrden(tArbol* arbol,void accion(const void*));
-void recorrerInOrden(tArbol* arbol,void accion(const void*));
-void recorrerPosOrden(tArbol* arbol,void accion(const void*));
-int contarTodosLosNodos(tArbol* arbol);
-int contarNodosConHijos(tArbol* arbol);
-int contarNodosHojas(tArbol* arbol);
-int cortarNodosHojas(tArbol* arbol);
-void vaciarArbol(tArbol* arbol);
-int contarNodosConHijosXIzquierda(tArbol* arbol);
-int contarNodosDondeDatoMayorA(tArbol* arbol,void* dato,int resolverCondicion(const void*,const void*));
-int contarNodosDondeDatoMayorAReducido(tArbol* arbol,void* dato,int resolverCondicion(const void*,const void*));
-int alturaArbol(tArbol* arbol);
-int mostrarNodosDeXAltura(tArbol* arbol,int nivelElegido,void accion(const void*));
-int mostrarNodosHastaXAltura(tArbol* arbol,int nivelMax,int inclusive,void accion(const void*));
-int mostrarNodosDesdeXAltura(tArbol* arbol,int nivelMax,int inclusive, void accion(const void*));*/
-
 void crearArbol(tArbol *a);
+void recorrerPreOrden(tArbol *a, Accion accion, void *contexto);
+void recorrerInOrden(tArbol *a, Accion accion, void *contexto);
+void recorrerPosOrden(tArbol *a, Accion accion, void *contexto);
 int insertarEnArbol(tArbol *a, void *dato, unsigned tamDato, Cmp cmp);
+int contarNodos(tArbol *a);
+int contarHojas(tArbol *a);
+int contarNodosConHijos(tArbol *a);
+int contarNodosConHijosSoloPorIzq(tArbol *a);
+int contarNodosConHijosSoloPorDer(tArbol *a);
+int obtenerAltura(tArbol *a);
+int contarNodosEnAlturaN(tArbol *a, int altura);
+int contarNodosHastaAlturaN(tArbol *a, int altura);
+int contarNodosHastaAlturaNInclusive(tArbol *a, int altura);
+int contarNodosAPartirDeAlturaN(tArbol *a, int altura);
+int _contarNodosAPartirDeAlturaN(tArbol *a, int alturaActual, int altura);
+void cortarHojas(tArbol *a);
+void vaciarArbol(tArbol *a);
 tArbol *buscarEnArbol(tArbol *a, void *elem, Cmp cmp);
 
 int cargarArchivoBinarioOrdenadoArbol(char *nomArch, tArbol *a, unsigned tamDato);

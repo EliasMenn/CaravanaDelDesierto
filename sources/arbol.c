@@ -4,6 +4,33 @@ void crearArbol(tArbol *a){
     *a = NULL;
 }
 
+void recorrerPreOrden(tArbol *a, Accion accion, void *contexto){
+    if(!*a)
+        return ;
+
+    accion((*a)->dato, contexto);
+    recorrerPreOrden(&(*a)->izq, accion, contexto);
+    recorrerPreOrden(&(*a)->der, accion, contexto);
+}
+
+void recorrerInOrden(tArbol *a, Accion accion, void *contexto){
+    if(!*a)
+        return ;
+
+    recorrerInOrden(&(*a)->izq, accion, contexto);
+    accion((*a)->dato, contexto);
+    recorrerInOrden(&(*a)->der, accion, contexto);
+}
+
+void recorrerPosOrden(tArbol *a, Accion accion, void *contexto){
+    if(!*a)
+        return ;
+
+    recorrerPosOrden(&(*a)->izq, accion, contexto);
+    recorrerPosOrden(&(*a)->der, accion, contexto);
+    accion((*a)->dato, contexto);
+}
+
 int insertarEnArbol(tArbol *a, void *dato, unsigned tamDato, int cmp(const void*, const void *)){
     if(*a){
         if(cmp((*a)->dato, dato) > 0)
@@ -34,6 +61,133 @@ int insertarEnArbol(tArbol *a, void *dato, unsigned tamDato, int cmp(const void*
     return EXITO;
 }
 
+int contarNodos(tArbol *a){
+    if(!*a)
+        return 0;
+
+    return contarNodos(&(*a)->izq) + contarNodos(&(*a)->der) + 1;
+}
+
+int contarHojas(tArbol *a){
+    if(!*a)
+        return 0;
+
+    if(!(*a)->izq && !(*a)->der)
+        return 1;
+
+    return contarHojas(&(*a)->izq) + contarHojas(&(*a)->der);
+}
+
+int contarNodosConHijos(tArbol *a){
+    if(!*a)
+        return 0;
+
+    if((*a)->izq || (*a)->der)
+        return contarNodosConHijos(&(*a)->izq) + contarNodosConHijos(&(*a)->der) + 1;
+
+    return 0;
+}
+
+int contarNodosConHijosSoloPorIzq(tArbol *a){
+    if(!*a)
+        return 0;
+
+    if((*a)->izq && !(*a)->der)
+        return 1 + contarNodosConHijosSoloPorIzq(&(*a)->izq);
+
+    return contarNodosConHijosSoloPorIzq(&(*a)->izq) + contarNodosConHijosSoloPorIzq(&(*a)->der);
+}
+
+int contarNodosConHijosSoloPorDer(tArbol *a){
+    if(!*a)
+        return 0;
+
+    if(!(*a)->izq && (*a)->der)
+        return 1 + contarNodosConHijosSoloPorDer(&(*a)->der);
+
+    return contarNodosConHijosSoloPorDer(&(*a)->izq) + contarNodosConHijosSoloPorDer(&(*a)->der);
+}
+
+int obtenerAltura(tArbol *a){
+    if(!*a)
+        return 0;
+
+    int altIzq = obtenerAltura(&(*a)->izq);
+    int altDer = obtenerAltura(&(*a)->der);
+
+    return MAX(altIzq, altDer) + 1;
+}
+
+int contarNodosEnAlturaN(tArbol *a, int altura){
+    if(!*a)
+        return 0;
+
+    if(altura == 1)
+        return 1;
+
+    return contarNodosEnAlturaN(&(*a)->izq, altura-1) + contarNodosEnAlturaN(&(*a)->der, altura-1);
+}
+
+int contarNodosHastaAlturaN(tArbol *a, int altura){
+    if(!*a)
+        return 0;
+
+    if(altura == 2)
+        return 1;
+
+    return contarNodosEnAlturaN(&(*a)->izq, altura-1) + contarNodosEnAlturaN(&(*a)->der, altura-1) + 1;
+}
+
+int contarNodosHastaAlturaNInclusive(tArbol *a, int altura){
+    if(!*a)
+        return 0;
+
+    if(altura == 1)
+        return 1;
+
+    return contarNodosHastaAlturaNInclusive(&(*a)->izq, altura-1) + contarNodosHastaAlturaNInclusive(&(*a)->der, altura-1) + 1;
+}
+
+int contarNodosAPartirDeAlturaN(tArbol *a, int altura){
+    return _contarNodosAPartirDeAlturaN(a, 1, altura);
+}
+
+int _contarNodosAPartirDeAlturaN(tArbol *a, int alturaActual, int altura){
+    if(!*a)
+        return 0;
+
+    int cont = alturaActual >= altura ? 1 : 0;
+
+    return _contarNodosAPartirDeAlturaN(&(*a)->izq, alturaActual+1, altura) + _contarNodosAPartirDeAlturaN(&(*a)->der, alturaActual+1, altura) + cont;
+}
+
+void cortarHojas(tArbol *a){
+    if(!*a)
+        return ;
+
+    if(!(*a)->izq && !(*a)->der){
+        free((*a)->dato);
+        free(*a);
+        *a = NULL;
+        return ;
+    }
+
+    cortarHojas(&(*a)->izq);
+    cortarHojas(&(*a)->der);
+}
+
+void vaciarArbol(tArbol *a){
+    if(!*a)
+        return ;
+
+    vaciarArbol(&(*a)->izq);
+    vaciarArbol(&(*a)->der);
+
+    free((*a)->dato);
+    free(*a);
+    *a = NULL;
+}
+
 tArbol *buscarEnArbol(tArbol *a, void *elem, Cmp cmp){
     if(!*a)
         return NULL;
@@ -52,11 +206,11 @@ int cargarArchivoBinarioOrdenadoArbol(char *nomArch, tArbol *a, unsigned tamDato
 
     //si el arbol tiene elementos, no se sobrescribe
     if(*a)
-        return EXITO;
+        return ALL_OK;
 
     archivo = fopen(nomArch, "rb");
     if(!archivo)
-        return ERROR_ARCHIVO;
+        return ERR_ARCH;
 
     resultado = cargarDesdeArchivoBinarioOrdenadoArbol(archivo, a, tamDato);
 
@@ -64,6 +218,7 @@ int cargarArchivoBinarioOrdenadoArbol(char *nomArch, tArbol *a, unsigned tamDato
     return resultado;
 }
 
+//recibe un archivo abierto y lo carga en un arbol, esta funcion es un envoltorio
 int cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned tamDato){
     fseek(archivo, 0, SEEK_END);
 
