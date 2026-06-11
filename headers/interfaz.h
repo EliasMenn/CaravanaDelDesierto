@@ -7,5 +7,5 @@
 #include <time.h>
 int creacionArchivoCaravana(const char* archCaravana,tListaDobCirc* pldc,tConfig* configuracion);
 char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasExtras, int *cantOasis, int *cantTormentas, int *vacios, int restantes);
-void mostrarTablero(tListaDobCirc* tablero);
+void mostrarTablero(tEstadoJuego* estado);
 #endif // INTERFAZ_H_INCLUDED

@@ -100,19 +100,48 @@ int creacionArchivoCaravana(const char* archCaravana,tListaDobCirc* pldc,tConfig
 }
 
 
-void mostrarTablero(tListaDobCirc* tablero)
-{
-    tNodoDob* actual = *tablero;
+
+void mostrarTablero(tEstadoJuego* estado) {
+    tNodoDob* actual = *(estado->tablero);
     int posicion = 1;
 
-    if (!actual) {
-        printf("El tablero está vacío.\n");
-        return;
-    }
+    if (!actual) return;
 
     do {
-        printf("%02d:%c\n", posicion, *(char*)(actual->info));
+        char c = *(char*)(actual->info);
+        
+        // Si hay que imprimir al jugador, armamos el casillero compuesto
+        if (c == 'J') {
+            // Si pisamos tierra vacía ('.'), premio consumido o inicio, mostramos solo [J] o [I J]
+            if (estado->terrenoBajoJugador == '.' || estado->terrenoBajoJugador == 'I') {
+                if (estado->terrenoBajoJugador == 'I') printf("%02d:[I J]\n", posicion);
+                else printf("%02d:[J]\n", posicion);
+            } 
+            // Si pisamos Oasis o Tormenta, mostramos ambas letras combinadas
+            else {
+                printf("%02d:[%c J]\n", posicion, estado->terrenoBajoJugador);
+            }
+        } 
+        // Si no es el jugador, imprimimos la letra suelta (O, T, P, V, B, .)
+        else {
+            printf("%02d:%c\n", posicion, c);
+        }
+        
         actual = actual->sig;
         posicion++;
-    } while (actual != *tablero);
+    } while (actual != *(estado->tablero));
+
+    // IMPRESIÓN DE ESTADO (HUD)
+    printf("\n======================================================\n");
+    printf(" JUGADOR: %s | VIDAS: %d | PUNTOS: %d | TURNOS: %d\n", 
+           estado->jugador.nombre, 
+           estado->vidasActuales, 
+           estado->puntosActuales, 
+           estado->turnosJugados);
+           
+    // Indicador visual si está protegido por el oasis o atrapado en tormenta
+    if (estado->jugadorProtegido) printf(" [ESTADO: Protegido por el Oasis]\n");
+    if (estado->perdioTurno) printf(" [ESTADO: Atrapado en Tormenta de Arena]\n");
+    printf("======================================================\n");
 }
+

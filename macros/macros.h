@@ -46,4 +46,8 @@
 
 //juego.h
 #define ARCH_INDICE_JUGADORES "ix_nomJugador.bin" // cambien el nombre como quieran
+
+
+//bandidos.h
+#define MAX_BANDIDOS 10
 #endif //MACROS_H_INCLUDED

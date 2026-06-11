@@ -3,12 +3,15 @@
 int definirPosiciones(tPosiciones *pos, const char* archConfig)
 {
     tConfig configuracion;
-    cargarConfiguracion(&configuracion,archConfig);
+    if(!cargarConfiguracion(&configuracion,archConfig))
+    {
+        return ERROR_ARCHIVO;
+    }
     pos->capacidadBandidos = configuracion.maximoBandidos;
     pos->posBandidos = (int*)malloc(sizeof(int)*pos->capacidadBandidos);
     if(pos->posBandidos == NULL)
     {
-        free(pos->posBandidos);
+        // free innecesario ya que si posBandidos es NULL no reservo la memoria
         return ERROR_MEM;
     }
     pos->TamTablero = configuracion.cantPosiciones;
@@ -25,38 +28,52 @@ void actualizarPosiciones(tListaDobCirc *pLista, tPosiciones *pos)
 
 void calcularMovimientos(tPosiciones *pos, tCola *cola)
 {
-    int i = 0, mov;
+    int mov;
     int izq, der;
-    while(i<(pos->cantBandidos))
+    
+    // Puntero auxiliar para recorrer el bloque de memoria
+    int *pBandido = pos->posBandidos; 
+    // Puntero de condición de corte (apunta al final lógico del arreglo)
+    int *pFinBandidos = pos->posBandidos + pos->cantBandidos; 
+    
+    // Usamos esto solo para asignarles un ID visual en el tMovimiento (1, 2, 3...)
+    int idBandido = 1; 
+
+    while (pBandido < pFinBandidos)
     {
         mov = tirar_dado(6);
-        der = (pos->posJugador-*(pos->posBandidos+i)+pos->TamTablero)%pos->TamTablero;
-        izq = (*(pos->posBandidos+i)-pos->posJugador+pos->TamTablero)%pos->TamTablero;
-        if(der<izq)
+        
+        // Calculamos distancias desreferenciando el puntero actual (*pBandido)
+        der = (pos->posJugador - *pBandido + pos->TamTablero) % pos->TamTablero;
+        izq = (*pBandido - pos->posJugador + pos->TamTablero) % pos->TamTablero;
+        
+        char dirCalculada;
+        if(der <= izq)
         {
-            *(pos->posBandidos+i)+=mov;
-            if((*(pos->posBandidos+i)>=pos->TamTablero)
-            {
-                (*(pos->posBandidos+i)-=pos->TamTablero;
-            }
-            aColar(cola,(pos->posBandidos+i),sizeof(int));
+            dirCalculada = 'F';
         }
         else
         {
-            (*pos->posBandidos+i)-=mov;
-            if((*(pos->posBandidos+i)<0)
-            {
-                (*(pos->posBandidos+i)+=pos->TamTablero;
-            }
-            aColar(cola,(pos->posBandidos+i),sizeof(int));
+            dirCalculada = 'B';
         }
-        i++;
+        
+        tMovimiento movBandido;
+        movBandido.tipoEntidad = 'B';
+        movBandido.id_entidad = idBandido; 
+        movBandido.direccion = dirCalculada;
+        movBandido.pasos = mov;
+        
+        aColar(cola, &movBandido, sizeof(tMovimiento));
+        
+        // Desplazamos el puntero a la siguiente dirección de memoria de tipo int
+        pBandido++; 
+        idBandido++;
     }
 }
 
 void encontrarPosiciones(const void* dato, void* contexto)
 {
-    tPosiciones pos = (tPosiciones*)contexto;
+    tPosiciones* pos = (tPosiciones*)contexto;
     char caracterComp = *(char*)dato;
 
     if(caracterComp == 'B')
@@ -74,7 +91,3 @@ void encontrarPosiciones(const void* dato, void* contexto)
     }
     pos->posActual++;
 }
-
-
-
-
