@@ -1,9 +1,13 @@
 #ifndef ARBOL_H_INCLUDED
 #define ARBOL_H_INCLUDED
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../macros/macros.h"
+
+#define TAM_NOMBRE 51 //si se usa pasar a la bibilioteca macros.h
+
 typedef struct sNodoArbol
 {
     void* dato;
@@ -12,9 +16,15 @@ typedef struct sNodoArbol
     struct sNodoArbol* der;
 }tNodoArbol;
 
-typedef tNodoArbol* tArbol;
+typedef struct{
+    char nombre[TAM_NOMBRE];
+    int reg;
+}tIndice;
 
-void crearArbol(tArbol* arbol);
+typedef tNodoArbol* tArbol;
+typedef int(*Cmp)(const void *n1, const void *n2);
+
+/*void crearArbol(tArbol* arbol);
 int insertarEnArbolRecursivo(tArbol* arbol,const void* dato,unsigned tam,int cmp(const void*,const void*));
 int insertarEnArbol(tArbol* arbol,const void* dato,unsigned tam,int cmp(const void*,const void*));
 int _contarTodosLosNodos(tArbol* arbol,int nodosContados);
@@ -32,5 +42,14 @@ int contarNodosDondeDatoMayorAReducido(tArbol* arbol,void* dato,int resolverCond
 int alturaArbol(tArbol* arbol);
 int mostrarNodosDeXAltura(tArbol* arbol,int nivelElegido,void accion(const void*));
 int mostrarNodosHastaXAltura(tArbol* arbol,int nivelMax,int inclusive,void accion(const void*));
-int mostrarNodosDesdeXAltura(tArbol* arbol,int nivelMax,int inclusive, void accion(const void*));
+int mostrarNodosDesdeXAltura(tArbol* arbol,int nivelMax,int inclusive, void accion(const void*));*/
+
+void crearArbol(tArbol *a);
+int insertarEnArbol(tArbol *a, void *dato, unsigned tamDato, Cmp cmp);
+tArbol *buscarEnArbol(tArbol *a, void *elem, Cmp cmp);
+
+int cargarArchivoBinarioOrdenadoArbol(char *nomArch, tArbol *a, unsigned tamDato);
+int cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned tamDato);
+int _cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned tamDato, int li, int ls);
+
 #endif // ARBOL_H_INCLUDED
