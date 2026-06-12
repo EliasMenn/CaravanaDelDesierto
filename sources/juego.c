@@ -19,8 +19,10 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov) {
 
     tNodoDob* nodoActual = NULL;
     int offset = 0;
+    tNodoDob* nodoDestino = nodoActual;
+    int pasosRestantes = mov->pasos;
+    char direccionActual = mov->direccion;
 
-    // 1. Buscar desde dónde sale la entidad
     if (mov->tipoEntidad == 'J') {
         nodoActual = buscarNodoEntidad(estado->tablero, 'J', 0);
     } else {
@@ -33,41 +35,32 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov) {
 
     if (!nodoActual) return;
 
-    // --- PARCHE ANTI-FANTASMAS ---
     if (mov->tipoEntidad == 'B' && *(char*)(nodoActual->info) != 'B') {
         return;
     }
 
-    tNodoDob* nodoDestino = nodoActual;
-    int pasosRestantes = mov->pasos;
-    char direccionActual = mov->direccion;
-
-    // 2. Física de Muros Estáticos (Paredes sólidas identificadas por puntero)
-    // 2. Física Mixta (Rebote en la Meta, Muro en el Inicio)
     while (pasosRestantes > 0) {
         tNodoDob* posibleDestino;
         if (direccionActual == 'F' || direccionActual == 'f') posibleDestino = nodoDestino->sig;
         else posibleDestino = nodoDestino->ant;
 
-        // --- FÍSICA DEL JUGADOR ---
+        // --- LOGICA DE JUGADOR ---
         if (mov->tipoEntidad == 'J') {
-            // REBOTE EN LA META ('S'): Si avanza y trata de dar la vuelta cruzando hacia 'I'
+            // REBOTE EN LA META ('S')
             if ((direccionActual == 'F' || direccionActual == 'f') && posibleDestino == *(estado->tablero)) {
-                direccionActual = 'B'; // Invierte la dirección
-                posibleDestino = nodoDestino->ant; // Empieza a caminar para atrás
+                direccionActual = 'B';
+                posibleDestino = nodoDestino->ant;
             }
-            // MURO EN EL INICIO ('I'): Si retrocede y trata de dar la vuelta cruzando hacia 'S'
+            // REBOTE EN EL INICIO ('I')
             else if ((direccionActual == 'B' || direccionActual == 'b') && posibleDestino == (*(estado->tablero))->ant) {
-                break; // Frena en seco y pierde los pasos restantes
+                break;
             }
         }
-        // --- FÍSICA DE LOS BANDIDOS ---
+        // --- LOGICA DE LOS BANDIDOS ---
         else if (mov->tipoEntidad == 'B') {
-            // Los bandidos chocan contra ambas paredes (no dan la vuelta ni rebotan)
             if ((direccionActual == 'F' || direccionActual == 'f') && posibleDestino == *(estado->tablero)) break;
             else if ((direccionActual == 'B' || direccionActual == 'b') && posibleDestino == (*(estado->tablero))->ant) break;
 
-            // Frena para no pisar al otro bandido
             if (*(char*)(posibleDestino->info) == 'B') break;
         }
 
@@ -75,7 +68,7 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov) {
         pasosRestantes--;
     }
 
-    // 3. Aplicar el movimiento visual
+    // Aplicamos el movimiento visual
     if (mov->tipoEntidad == 'J') {
         *(char*)(nodoActual->info) = estado->terrenoBajoJugador;
         char destino = *(char*)(nodoDestino->info);
@@ -102,19 +95,18 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov) {
 }
 
 
-// Actualizá la firma en tu archivo .h para que acepte el int extra
 int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio) {
     char terreno = estado->terrenoBajoJugador;
 
-    // A. Llegada a la Ciudad Refugio (S)
+    //  Llego a Refugio (S)
     if (terreno == 'S') {
         printf("\nFelicidades! Has llegado a la Ciudad Refugio.\n");
         return 1;
     }
 
-    // B. Intercepción de Bandido (B) usando la nueva bandera
+    // Atrapado por bandido (B)
     if (estado->colisionBandido) {
-        estado->colisionBandido = 0; // Apagamos la alarma
+        estado->colisionBandido = 0;
 
         if (estado->jugadorProtegido) {
             printf("\nUn bandido intento atraparte, pero la proteccion del Oasis te salvo!\n");
@@ -130,9 +122,9 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio) {
         }
     }
 
-    // --- EFECTOS DEL TERRENO (Solo aplican si pisó una casilla NUEVA este turno) ---
+    // --- EFECTOS DE TERRENO
     if (jugadorSeMovio) {
-        // C. Tormenta de Arena (T) -> PERSISTE
+        // Tormenta de Arena (T)
         if (terreno == 'T') {
             if (estado->jugadorProtegido) printf("\nAtraviesas una tormenta, pero tu proteccion anula el efecto.\n");
             else {
@@ -141,21 +133,21 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio) {
             }
         }
 
-        // D. Premios (P) -> SE CONSUME
+        //  Premios (P)
         if (terreno == 'P') {
             estado->puntosActuales++;
             printf("\nHas capturado un Premio! Puntos actuales: %d.\n", estado->puntosActuales);
             estado->terrenoBajoJugador = '.';
         }
 
-        // E. Vidas Extra (V) -> SE CONSUME
+        //  Vidas Extra (V)
         if (terreno == 'V') {
             estado->vidasActuales++;
             printf("\nHas capturado una Vida Extra! Vidas actuales: %d.\n", estado->vidasActuales);
             estado->terrenoBajoJugador = '.';
         }
 
-        // F. Oasis (O) -> PERSISTE
+        //  Oasis (O)
         if (terreno == 'O') {
             printf("\nHas llegado a un Oasis! Obtienes proteccion para el turno siguiente.\n");
             estado->jugadorProtegido = 1;
@@ -164,7 +156,7 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio) {
         }
     }
     else {
-        // Si no se movió (ej. por perder el turno), la protección del oasis se agota
+        // Si no se movió (ej. por perder el turno), la protección del oasis se termina
         estado->jugadorProtegido = 0;
     }
 
@@ -189,6 +181,8 @@ void mostrarHistorialMovimientos() {
 
 void bucleJuego(tEstadoJuego* estado, tConfig* config) {
     int finPartida = 0;
+    int jugadorSeMovio;
+    tMovimiento movJugador;
     tPosiciones pos;
     if (definirPosiciones(&pos, "config.txt") != EXITO) {
         printf("Error al cargar memoria para los bandidos.\n");
@@ -196,24 +190,21 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config) {
     }
 
     while (!finPartida) {
-        int jugadorSeMovio = 0; // NUEVO: Bandera de turno
+        jugadorSeMovio = 0;
 
-        // --- FASE 1: ENCOLAR MOVIMIENTOS ---
+        // ENCOLAMOS LOS MOVIMIENTOS
         if (estado->perdioTurno) {
             printf("\nPierdes este turno debido a la tormenta de arena.\n");
             estado->perdioTurno = 0;
-            jugadorSeMovio = 0; // No se movió
+            jugadorSeMovio = 0;
         } else {
             int dadoJ = tirar_dado(6);
             char dirJ;
             printf("\nSacaste un %d. Hacia donde te moves? (F: Adelante, B: Atras): ", dadoJ);
             fflush(stdin);
             scanf(" %c", &dirJ);
-
-            tMovimiento movJugador;
             movJugador.tipoEntidad = 'J';
             movJugador.id_entidad = 0;
-            // Un pequeño truco extra para convertir siempre a mayúscula y evitar problemas:
             if (dirJ == 'f') dirJ = 'F';
             if (dirJ == 'b') dirJ = 'B';
             movJugador.direccion = dirJ;
@@ -228,7 +219,7 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config) {
         actualizarPosiciones(estado->tablero, &pos);
         calcularMovimientos(&pos, estado->colaMovimientos);
 
-        // --- FASE 2: DESENCOLAR Y APLICAR ---
+        // DESENCOLAMOS Y MOVEMOS
         while (colaVacia(estado->colaMovimientos)==COLA_NO_VACIA) {
             tMovimiento movActual;
             outCola(estado->colaMovimientos, &movActual, sizeof(tMovimiento));
@@ -240,11 +231,10 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config) {
             }
         }
 
-        // --- FASE 3: VERIFICAR EFECTOS ---
-        // Le pasamos la bandera para saber si evaluar el terreno
+        // VERIFICAMOS RESULTADO FINAL
         finPartida = verificarEstadoTurno(estado, jugadorSeMovio);
 
-        // --- FASE 4: ACTUALIZAR PANTALLA ---
+        // ACTUALIZAMOS PANTALLA
         if (!finPartida) {
             printf("\nPresiona cualquier tecla para continuar...\n");
             getch();
@@ -262,13 +252,15 @@ void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* j
     int posicion;
     int i=0;
     tJugador jugadorTmp;
+    int estadoBusqueda
+    tIndice nuevoIndice;
 
+    char* pTerreno;
+    tNodoDob* nodoInicio
     printf("\n Ingrese su nombre (alias) :");
     fflush(stdin);
     scanf("%s", jugadorTmp.nombre);
-
-    // --- BÚSQUEDA SEGURA ---
-    int estadoBusqueda = BuscarNombreJugador(jugadorTmp.nombre, jugadores, cmp, &posicion);
+    estadoBusqueda = BuscarNombreJugador(jugadorTmp.nombre, jugadores, cmp, &posicion);
 
     if(estadoBusqueda == NO_EXISTE)
     {
@@ -276,7 +268,6 @@ void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* j
         jugadorTmp.partidasJugadas = 0;
         guardarJugador(&jugadorTmp, ARCH_JUGADORES);
 
-        tIndice nuevoIndice;
         strcpy(nuevoIndice.clave, jugadorTmp.nombre);
         nuevoIndice.pos = jugadorTmp.id - 1;
 
@@ -291,9 +282,9 @@ void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* j
         }
     }
 
-    // --- CARGAMOS EL ESTADO INICIAL DEL JUEGO ---
+    // CARGAMOS EL ESTADO DE INICIO
 
-    estado->jugador = jugadorTmp;                   // Guardamos los datos persistentes del jugador
+    estado->jugador = jugadorTmp;                   // Guardamos los datos del jugador
     estado->vidasActuales = config->vidasInicio;   // Asignamos las vidas desde el archivo config.txt
     estado->puntosActuales = 0;                     // Arranca sin premios
     estado->turnosJugados = 0;                      // Arranca en el turno 0
@@ -301,8 +292,8 @@ void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* j
     estado->perdioTurno = 0;                        // Sin penalización inicial
     estado->terrenoBajoJugador='I';              // El jugador inicia sobre el campamento inicial (I)
     estado->colisionBandido = 0;                  // No hay colisión al iniciar
-    // Inicializamos la memoria de los bandidos con '.' USANDO PUNTEROS
-    char* pTerreno = estado->terrenoBajoBandido;
+
+    pTerreno = estado->terrenoBajoBandido;
 
     while (i <  MAX_BANDIDOS) {
         *pTerreno = '.'; // Guardamos el punto en la dirección actual
@@ -312,10 +303,8 @@ void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* j
     // --------------------------------------------
     // --- HACER APARECER AL JUGADOR EN EL TABLERO ---
     // Nos posicionamos en el primer nodo (el Campamento Inicial)
-    tNodoDob* nodoInicio = *(estado->tablero);
+    nodoInicio = *(estado->tablero);
     if (nodoInicio) {
-        // Sobrescribimos la 'I' con la 'J'.
-        // (No perdemos la 'I' porque ya la guardamos en estado->terrenoBajoJugador = 'I')
         *(char*)(nodoInicio->info) = 'J';
     }
     // -----------------------------------------------
@@ -338,7 +327,7 @@ void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* j
     if(fReg) fclose(fReg);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void iniciarCaravanaDelDesierto()
 {
     // Declaramos las variables locales
