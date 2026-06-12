@@ -11,10 +11,10 @@
 
 typedef struct {
     int id;
-    char nombre[50];
+    char nombre[51];
     int partidasJugadas;
 } tJugador;
 int guardarJugador(tJugador* jugador,const char* archJugadores);
 int jugadorExiste(int id,const char* archJugadores);
-int BuscarNombreJugador(char* nombre,const tArbol* jugadores);
+int BuscarNombreJugador(char* nombre, const tArbol* jugadores, Cmp cmp, int* posEncontrada);
 #endif // JUGADOR_H_INCLUDED

@@ -5,7 +5,7 @@ int guardarJugador(tJugador* jugador,const char* archJugadores)
 {
     FILE* pj;
     if(jugadorExiste(jugador->id,archJugadores)==DUPLICADO)
-            return DUPLICADO;
+        return DUPLICADO;
     pj=fopen(archJugadores,"ab");
     if(!pj)
         return ERROR_ARCHIVO;
@@ -35,9 +35,9 @@ int jugadorExiste(int id,const char* archJugadores)///LOGICA PROVISORIA, CUANDO 
 }
 
 
-int BuscarNombreJugador(char* nombre,const tArbol* jugadores) ///LOGICA PROVISORIA, CUANDO VEAMOS INDICES SOBRE ARBOLES BINARIOS
+int BuscarNombreJugador(char* nombre, const tArbol* jugadores, Cmp cmp, int* posEncontrada)
 {
-
-    int result=buscarEnIndice(jugadores,nombre); //buscarEnIndice es una funcion que busca en el indice de jugadores (que esta cargado a memoria) el nombre del jugador y devuelve la posicion en donde se encuentra el nombre (si existe)
-    return result;
+    return buscarEnIndice(jugadores, nombre, cmp, posEncontrada);
 }
+
+

@@ -50,4 +50,12 @@
 
 //bandidos.h
 #define MAX_BANDIDOS 10
+
+
+//cola.h
+#define COLA_VACIA 111
+#define COLA_NO_VACIA 121
+#define COLA_LLENA 131
+#define COLA_NO_LLENA 141
+
 #endif //MACROS_H_INCLUDED

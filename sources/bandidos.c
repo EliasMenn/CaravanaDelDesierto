@@ -29,48 +29,36 @@ void actualizarPosiciones(tListaDobCirc *pLista, tPosiciones *pos)
 void calcularMovimientos(tPosiciones *pos, tCola *cola)
 {
     int mov;
-    int izq, der;
-    
-    // Puntero auxiliar para recorrer el bloque de memoria
-    int *pBandido = pos->posBandidos; 
-    // Puntero de condición de corte (apunta al final lógico del arreglo)
-    int *pFinBandidos = pos->posBandidos + pos->cantBandidos; 
-    
-    // Usamos esto solo para asignarles un ID visual en el tMovimiento (1, 2, 3...)
-    int idBandido = 1; 
+    int *pBandido = pos->posBandidos;
+    int *pFinBandidos = pos->posBandidos + pos->cantBandidos;
+    int idBandido = 1;
 
     while (pBandido < pFinBandidos)
     {
         mov = tirar_dado(6);
-        
-        // Calculamos distancias desreferenciando el puntero actual (*pBandido)
-        der = (pos->posJugador - *pBandido + pos->TamTablero) % pos->TamTablero;
-        izq = (*pBandido - pos->posJugador + pos->TamTablero) % pos->TamTablero;
-        
+
+        // --- NUEVO: CÁLCULO LINEAL DE PERSECUCIÓN ---
+        // Como el mapa es una línea estática, van directo hacia el jugador
         char dirCalculada;
-        if(der <= izq)
-        {
+        if(pos->posJugador >= *pBandido) {
             dirCalculada = 'F';
-        }
-        else
-        {
+        } else {
             dirCalculada = 'B';
         }
-        
+
         tMovimiento movBandido;
         movBandido.tipoEntidad = 'B';
-        movBandido.id_entidad = idBandido; 
+        movBandido.id_entidad = idBandido;
         movBandido.direccion = dirCalculada;
         movBandido.pasos = mov;
-        
+        movBandido.posOrigen = *pBandido; // El GPS para no perder memoria
+
         aColar(cola, &movBandido, sizeof(tMovimiento));
-        
-        // Desplazamos el puntero a la siguiente dirección de memoria de tipo int
-        pBandido++; 
+
+        pBandido++;
         idBandido++;
     }
 }
-
 void encontrarPosiciones(const void* dato, void* contexto)
 {
     tPosiciones* pos = (tPosiciones*)contexto;

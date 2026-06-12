@@ -2,8 +2,6 @@
 #define ARCHIVOS_H_INCLUDED
 
 #include "configuracion.h"
-#include "interfaz.h"
-#include "juego.h"
 #include "jugador.h"
 
 int buscarJugadorEnArchivo(const char* archJugadores,int posicion,tJugador* jugador);// esta funcion es para buscar en el archivo original de jugadores el id y partidas jugadas del jugador,
