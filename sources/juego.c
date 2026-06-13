@@ -67,6 +67,7 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov) {
     tNodoDob* nodoDestino;
     int pasosRestantes = mov->pasos;
     char direccionActual = mov->direccion;
+    int moviValido = 0;
 
     if (mov->tipoEntidad == 'J') {
         nodoActual = buscarNodoEntidad(estado->tablero, 'J', 0);
@@ -86,7 +87,7 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov) {
 
     nodoDestino = nodoActual;
 
-    while (pasosRestantes > 0) {
+    while (pasosRestantes > 0 && moviValido == 0) {
         tNodoDob* posibleDestino;
         if (direccionActual == 'F' || direccionActual == 'f') posibleDestino = nodoDestino->sig;
         else posibleDestino = nodoDestino->ant;
@@ -105,14 +106,17 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov) {
         }
         // --- LOGICA DE LOS BANDIDOS ---
         else if (mov->tipoEntidad == 'B') {
-            if ((direccionActual == 'F' || direccionActual == 'f') && posibleDestino == *(estado->tablero)) break;
-            else if ((direccionActual == 'B' || direccionActual == 'b') && posibleDestino == (*(estado->tablero))->ant) break;
-
-            if (*(char*)(posibleDestino->info) == 'B') break;
+            if ((direccionActual == 'F' || direccionActual == 'f') && posibleDestino == *(estado->tablero))
+                moviValido = 1;
+            else if ((direccionActual == 'B' || direccionActual == 'b') && posibleDestino == (*(estado->tablero))->ant)
+                moviValido = 1;
+            if (*(char*)(posibleDestino->info) == 'B')
+                moviValido = 1;
         }
-
-        nodoDestino = posibleDestino;
-        pasosRestantes--;
+        if(moviValido == 0){
+            nodoDestino = posibleDestino;
+            pasosRestantes--;
+        }
     }
 
     // Aplicamos el movimiento visual
