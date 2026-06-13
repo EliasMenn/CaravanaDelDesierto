@@ -1,7 +1,5 @@
 #include "..\headers\arbol.h"
 
-
-
 void crearArbol(tArbol *a){
     *a = NULL;
 }
@@ -225,6 +223,7 @@ int cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned ta
     fseek(archivo, 0, SEEK_END);
 
     int tam = ftell(archivo);
+
     //si el archivo esta vacio, no se carga nada
     if(!tam)
         return EXITO;
@@ -261,9 +260,19 @@ int _cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned t
     (*a)->der = NULL;
 
     resultado = _cargarDesdeArchivoBinarioOrdenadoArbol(archivo, &(*a)->izq, tamDato, li, medio-1);
+
     //si hubo algun error en la rama izquierda no tiene sentido recorrer la derecha, asi que retorna el codigo de error correspondiente
     if(resultado != EXITO)
         return resultado;
 
     return _cargarDesdeArchivoBinarioOrdenadoArbol(archivo, &(*a)->der, tamDato, medio+1, ls);
+}
+
+void grabarArbol(tArbol* a, FILE* pf) {
+    if(!*a)
+        return;
+
+    grabarArbol(&(*a)->izq, pf); //recorrido In-Orden para que quede ordenado
+    fwrite((*a)->dato, (*a)->tamDato, 1, pf);
+    grabarArbol(&(*a)->der, pf);
 }

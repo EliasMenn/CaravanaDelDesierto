@@ -1,10 +1,10 @@
 #ifndef COLA_H_INCLUDED
 #define COLA_H_INCLUDED
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include  "macros.h"
+#include  "../macros/macros.h"
 
 typedef struct sNodo
 {
@@ -24,4 +24,5 @@ int aColar(tCola* cola, const void* dato, unsigned tam);
 int verTope(const tCola* cola, void *dato, unsigned tam);
 int outCola(tCola* cola, void* dato, unsigned tam);
 void vaciarCola(tCola* cola);
+
 #endif // COLA_H_INCLUDED

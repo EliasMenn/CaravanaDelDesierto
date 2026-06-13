@@ -1,5 +1,4 @@
-#include "Indice.h"
-
+#include "../headers/Indice.h"
 
 int contarNodosEnIndice(tArbol* indice)
 {
@@ -35,7 +34,7 @@ int insertarEnIndice(tArbol* indice, char* nom, unsigned tamNom,Cmp cmp)
     memcpy((*indice)->dato, nom, tamNom);
     (*indice)->tamDato = tamNom;
     (*indice)->izq = NULL;
-    (*indice)->der= NULL;
+    (*indice)->der = NULL;
 
     return EXITO;
 }
@@ -60,7 +59,6 @@ int cargarIndiceJugadores(tArbol* indice, const char* archIndice,unsigned tamDat
     return resultado;
 }
 
-// 1. Nueva Búsqueda por referencia
 int buscarEnIndice(const tArbol* indice, char* nombre, Cmp cmp, int* posEncontrada)
 {
     if(!*indice)
@@ -71,26 +69,18 @@ int buscarEnIndice(const tArbol* indice, char* nombre, Cmp cmp, int* posEncontra
     if(comparacion > 0)
         return buscarEnIndice(&(*indice)->izq, nombre, cmp, posEncontrada);
     else if(comparacion < 0)
-    return buscarEnIndice(&(*indice)->der, nombre, cmp, posEncontrada);
+        return buscarEnIndice(&(*indice)->der, nombre, cmp, posEncontrada);
 
-    // Lo encontró: Guardamos la posición en el puntero y devolvemos EXITO
+    //lo encontro, se guarda la posición en el puntero y se devuelve EXITO
     tIndice* registroEncontrado = (tIndice*)((*indice)->dato);
     *posEncontrada = registroEncontrado->pos;
     return EXITO;
 }
 
-// 2. Funciones para guardar el Árbol en disco antes de salir
-void _grabarArbol(tArbol* a, FILE* pf) {
-    if (!*a) return;
-    _grabarArbol(&(*a)->izq, pf); // Recorrido In-Orden para que quede ordenado
-    fwrite((*a)->dato, (*a)->tamDato, 1, pf);
-    _grabarArbol(&(*a)->der, pf);
-}
-
 void guardarIndiceJugadores(tArbol* indice, const char* archIndice) {
-    FILE* pf = fopen(archIndice, "wb"); // wb = Pisar y crear de cero
+    FILE* pf = fopen(archIndice, "wb");
     if (pf) {
-        _grabarArbol(indice, pf);
+        grabarArbol(indice, pf);
         fclose(pf);
     }
 }

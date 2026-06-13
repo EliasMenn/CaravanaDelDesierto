@@ -1,4 +1,4 @@
-#include "juego.h"
+#include "./headers/juego.h"
 
 int main(int argc, char *argv[])
 {

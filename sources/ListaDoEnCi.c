@@ -5,7 +5,8 @@ void crearLista(tListaDobCirc *pListaDobCirc)
 {
     (*pListaDobCirc) = NULL;
 }
-//Operaciones al principio
+
+///Operaciones al principio
 int insPrimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
 {
     tNodoDob *ult, *nue;
@@ -51,9 +52,7 @@ int quiPrimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
     tNodoDob *elim, *aux;
 
     if(!*pLista)
-    {
         return LISTA_VACIA;
-    }
 
     elim = *pLista;
 
@@ -78,43 +77,44 @@ int quiPrimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
 
     return EXITO;
 }
-//Operaciones al final
+
+///Operaciones al final
 int insUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
 {
     tNodoDob *nue, *ult;
-    nue=(tNodoDob*)malloc(sizeof(tNodoDob));
+    nue = (tNodoDob*)malloc(sizeof(tNodoDob));
     if(!nue)
         return ERROR_MEM;
-    nue->info=malloc(tam);
+    nue->info = malloc(tam);
     if(!nue->info)
     {
         free(nue);
         return ERROR_MEM;
     }
-    memcpy(nue->info,dato,tam);
-    nue->tamInfo=tam;
+    memcpy(nue->info, dato, tam);
+    nue->tamInfo = tam;
     if(!(*pLista))
     {
-        (*pLista)=nue;
-        nue->sig=nue;
-        nue->ant=nue;
+        (*pLista) = nue;
+        nue->sig = nue;
+        nue->ant = nue;
         return EXITO;
     }
-    ult=(*pLista)->ant;
-    nue->sig=(*pLista);
-    nue->ant=ult;
-    ult->sig=nue;
-    (*pLista)->ant=nue;
+    ult = (*pLista)->ant;
+    nue->sig = (*pLista);
+    nue->ant = ult;
+    ult->sig = nue;
+    (*pLista)->ant = nue;
+
     return EXITO; // siempre queda el puntero al inicio para poder mostrarlo desde ahi
 }
+
 int quiUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
 {
     tNodoDob *elim, *aux;
 
     if(!*pLista)
-    {
         return LISTA_VACIA;
-    }
 
     elim = (*pLista)->ant;
 
@@ -137,23 +137,27 @@ int quiUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam)
     return EXITO;
 }
 
-//Operaciones de consulta
+///Operaciones de consulta
 int verPrimListDobCirc(const tListaDobCirc *pLista, void *dato, size_t tam)
 {
     if(!(*pLista))
         return LISTA_VACIA;
-    memcpy(dato,(*pLista)->info,MIN(tam,(*pLista)->tamInfo));
+
+    memcpy(dato, (*pLista)->info, MIN(tam, (*pLista)->tamInfo));
     return EXITO;
 }
+
 int verUltListDobCirc(const tListaDobCirc *pLista, void *dato,size_t tam)
 {
     if(!(*pLista))
         return LISTA_VACIA;
-    memcpy(dato,(*pLista)->ant->info,MIN((*pLista)->ant->tamInfo,tam));
+
+    memcpy(dato, (*pLista)->ant->info, MIN((*pLista)->ant->tamInfo, tam));
     return EXITO;
 }
-//Operaciones de ordenamiento
-int InsOrdListDobCirc(tListaDobCirc *pLista,void * dato, unsigned tam, int cmp(const void* dato1,const void* dato2))
+
+///Operaciones de ordenamiento
+int InsOrdListDobCirc(tListaDobCirc *pLista, void * dato, unsigned tam, int cmp(const void* dato1, const void* dato2))
 {
     tNodoDob *nue, *act, *ant;
     int comp;
@@ -183,8 +187,9 @@ int InsOrdListDobCirc(tListaDobCirc *pLista,void * dato, unsigned tam, int cmp(c
         return EXITO;
     }
 
-    act=*pLista;
-    ant=(*pLista)->ant;
+    act = *pLista;
+    ant = (*pLista)->ant;
+
     do
     {
         comp = cmp(dato, act->info);
@@ -196,24 +201,25 @@ int InsOrdListDobCirc(tListaDobCirc *pLista,void * dato, unsigned tam, int cmp(c
             return DUPLICADO;
         }
 
-        if(comp>0)
+        if(comp > 0)
         {
-            ant=act;
-            act=act->sig;
+            ant = act;
+            act = act->sig;
         }
     } while(act!=*pLista && comp>0);
 
-    nue->sig=act;
-    nue->ant=ant;
-    ant->sig=nue;
-    act->ant=nue;
+    nue->sig = act;
+    nue->ant = ant;
+    ant->sig = nue;
+    act->ant = nue;
 
     if(act==*pLista && comp<0)
-        *pLista=nue;
+        *pLista = nue;
 
     return EXITO;
 }
-//Operaciones de eliminación
+
+///Vaciar
 void VaciarListaDobCirc(tListaDobCirc *pLista)
 {
     tNodoDob *elim;
@@ -236,11 +242,7 @@ void VaciarListaDobCirc(tListaDobCirc *pLista)
     *pLista = NULL;
 }
 
-int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam, int cmp(const void * dato1, const void *dato2))
-{
-    return EXITO;
-}
-
+///Recorrer
 void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*, void*), void* contexto)
 {
 

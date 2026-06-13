@@ -42,9 +42,9 @@
 		<Unit filename="headers/cola.h" />
 		<Unit filename="headers/configuracion.h" />
 		<Unit filename="headers/dado.h" />
+		<Unit filename="headers/interfaz.h" />
 		<Unit filename="headers/juego.h" />
 		<Unit filename="headers/jugador.h" />
-		<Unit filename="headers/menu.h" />
 		<Unit filename="macros/macros.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
@@ -73,13 +73,13 @@
 		<Unit filename="sources/dado.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="sources/interfaz.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="sources/juego.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/jugador.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sources/menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tests/sources/test_jugadores.c">

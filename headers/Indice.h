@@ -1,6 +1,7 @@
 #ifndef INDICE_H_INCLUDED
 #define INDICE_H_INCLUDED
-#include "arbol.h"
+
+#include "../headers/arbol.h"
 
 typedef struct
 {
@@ -12,6 +13,6 @@ int contarNodosEnIndice(tArbol* indice);
 int insertarEnIndice(tArbol* indice, char* nom, unsigned tamNom,Cmp cmp);
 int cargarIndiceJugadores(tArbol* indice, const char* archIndice,unsigned tamDato);
 int buscarEnIndice(const tArbol* indice, char* nombre, Cmp cmp, int* posEncontrada);
-void _grabarArbol(tArbol* a, FILE* pf);
 void guardarIndiceJugadores(tArbol* indice, const char* archIndice);
+
 #endif // INDICE_H_INCLUDED

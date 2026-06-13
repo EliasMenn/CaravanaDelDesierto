@@ -16,20 +16,26 @@ typedef struct sNodoDob
 typedef tNodoDob* tListaDobCirc;
 
 void crearLista(tListaDobCirc *pListaDobCirc);
+
 //Operaciones al principio
 int insPrimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam);
 int quiPrimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam);
+
 //Operaciones al final
 int insUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam);
 int quiUltListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam);
+
 //Operaciones de consulta
 int verPrimListDobCirc(const tListaDobCirc *pLista, void *dato, size_t tam);
 int verUltListDobCirc(const tListaDobCirc *pLista, void *dato,size_t tam);
+
 //Operaciones de ordenamiento
-int InsOrdListDobCirc(tListaDobCirc *pLista,void * dato, unsigned tam, int cmp(const void* dato1,const void* dato2));
-//Operaciones de eliminación
+int InsOrdListDobCirc(tListaDobCirc *pLista, void * dato, unsigned tam, int cmp(const void* dato1, const void* dato2));
+
+//Vaciar
 void vaciarListDobCirc(tListaDobCirc *pLista);
-int elimListDobCirc(tListaDobCirc *pLista, void *dato, size_t tam,  int cmp(const void * dato1, const void *dato2));
+
 //Operaciones de recorrido
-void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*, void*), void* contexto);
+void recorrerListaDobCirc(tListaDobCirc* pLista, void accion(const void*, void*), void* contexto);
+
 #endif // LISTADOENCI_H_INCLUDED

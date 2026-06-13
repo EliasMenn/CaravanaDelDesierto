@@ -1,16 +1,18 @@
 #include "../headers/jugador.h"
 
-
 int guardarJugador(tJugador* jugador,const char* archJugadores)
 {
     FILE* pj;
-    if(jugadorExiste(jugador->id,archJugadores)==DUPLICADO)
+    if(jugadorExiste(jugador->id,archJugadores) == DUPLICADO)
         return DUPLICADO;
-    pj=fopen(archJugadores,"ab");
+
+    pj = fopen(archJugadores,"ab");
     if(!pj)
         return ERROR_ARCHIVO;
-    fwrite(jugador,sizeof(tJugador),1,pj);
+
+    fwrite(jugador, sizeof(tJugador), 1, pj);
     fclose(pj);
+
     return EXITO;
 }
 
@@ -39,5 +41,3 @@ int BuscarNombreJugador(char* nombre, const tArbol* jugadores, Cmp cmp, int* pos
 {
     return buscarEnIndice(jugadores, nombre, cmp, posEncontrada);
 }
-
-

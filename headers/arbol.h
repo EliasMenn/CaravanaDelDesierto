@@ -1,5 +1,6 @@
 #ifndef ARBOL_H_INCLUDED
 #define ARBOL_H_INCLUDED
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,8 +38,9 @@ int _contarNodosAPartirDeAlturaN(tArbol *a, int alturaActual, int altura);
 void cortarHojas(tArbol *a);
 void vaciarArbol(tArbol *a);
 tArbol *buscarEnArbol(tArbol *a, void *elem, Cmp cmp);
-
 int cargarArchivoBinarioOrdenadoArbol(char *nomArch, tArbol *a, unsigned tamDato);
 int cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned tamDato);
 int _cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned tamDato, int li, int ls);
+void grabarArbol(tArbol* a, FILE* pf);
+
 #endif // ARBOL_H_INCLUDED
