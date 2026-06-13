@@ -1,4 +1,23 @@
-#include "../headers/interfaz.h"
+#include "..\headers\interfaz.h"
+
+//muestra el menu y devuelve la opcion elegida
+char menuPrincipal(const char *mensaje, const char *opciones){
+    char opc;
+
+    puts(mensaje);
+    printf("\nSeleccione una opcion: ");
+    fflush(stdin);
+    scanf("%c", &opc);
+    while(strchr(opciones, opc) == NULL){
+        printf("Error! Opcion no valida. Intente nuevamente: ");
+        fflush(stdin);
+        scanf("%c", &opc);
+    }
+
+    system("cls");
+    return opc;
+}
+
 char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasExtras, int *cantOasis, int *cantTormentas, int *vacios, int restantes)
 {
     srand(time(NULL));
@@ -40,60 +59,76 @@ char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasEx
     }
     r -= *cantTormentas;
 
-    // Si no cayï¿½ en ninguno de los anteriores, es un espacio vacï¿½o
+    // Si no cayo en ninguno de los anteriores, es un espacio vacio
     (*vacios)--;
     return '.';
 }
 
-int creacionArchivoCaravana(const char* archCaravana,tListaDobCirc* pldc,tConfig* configuracion)
+void mostrarTablero(tEstadoJuego* estado) {
+    tNodoDob* actual = *(estado->tablero);
+    int posicion = 1;
+    if (!actual) return;
+    do {
+        char c = *(char*)(actual->info);
+
+        // Si hay que imprimir al jugador, armamos el casillero compuesto
+        if (c == 'J') {
+            // Si pisamos tierra vacía ('.'), premio consumido o inicio, mostramos solo [J] o [I J]
+            if (estado->terrenoBajoJugador == '.' || estado->terrenoBajoJugador == 'I') {
+                if (estado->terrenoBajoJugador == 'I') printf("%02d:[I J]\n", posicion);
+                else printf("%02d:[J]\n", posicion);
+            }
+            // Si pisamos Oasis o Tormenta, mostramos ambas letras combinadas
+            else {
+                printf("%02d:[%c J]\n", posicion, estado->terrenoBajoJugador);
+            }
+        }
+        // Si no es el jugador, imprimimos la letra suelta (O, T, P, V, B, .)
+        else {
+            printf("%02d:%c\n", posicion, c);
+        }
+
+        actual = actual->sig;
+        posicion++;
+    } while (actual != *(estado->tablero));
+
+    // IMPRESIÓN DE ESTADO (HUD)
+    printf("\n======================================================\n");
+    printf(" JUGADOR: %s | VIDAS: %d | PUNTOS: %d | TURNOS: %d\n",
+           estado->jugador.nombre,
+           estado->vidasActuales,
+           estado->puntosActuales,
+           estado->turnosJugados);
+
+    // Indicador visual si está protegido por el oasis o atrapado en tormenta
+    if (estado->jugadorProtegido) printf(" [ESTADO: Protegido por el Oasis]\n");
+    if (estado->perdioTurno) printf(" [ESTADO: Atrapado en Tormenta de Arena]\n");
+    printf("======================================================\n");
+}
+
+void mostrarPantallaFinPartida(tEstadoJuego* estado)
 {
-    FILE* pCaravana;
-    char caracterAInsertar;
-    int cantPosiciones=0,cantBandidos=0,
-        cantTormentas=0,cantOasis=0,
-        cantPremios=0,cantVidasExtras=0,
-        cantEspeciales,cantEspaciosVacios,posIterativa=1;
+    system("cls");
+    printf("=====================================\n");
+    printf("          PARTIDA FINALIZADA\n");
+    printf("=====================================\n\n");
+    printf("  Jugador : %s\n", estado->jugador.nombre);
+    printf("  Puntos  : %d\n", estado->puntosActuales);
+    printf("  Vidas   : %d\n", estado->vidasActuales);
+    printf("  Turnos  : %d\n", estado->turnosJugados);
 
-    if(!cargarConfiguracion(configuracion,"config.txt"))
-        return ERROR_ARCHIVO;
-    if(configuracion->cantPosiciones<2) // solo tiene posicion para inicio y fin, no se puede jugar
-        return ERROR_ARCH_MAL_FORMADO; //no se puede jugar
-
-    /// carga de cantidades auxiliares
-    cantPosiciones=configuracion->cantPosiciones -2 ;// eliminamos de la cuenta al inicio y al fin
-    cantBandidos=configuracion->maximoBandidos;
-    cantVidasExtras=configuracion->maximoVidasExtras;
-    cantOasis=configuracion->maximoOasis;
-    cantPremios=configuracion->maximoPremios;
-    cantTormentas=configuracion->maximoTormentas;
-
-    cantEspeciales= cantBandidos + cantOasis + cantPremios + cantTormentas + cantVidasExtras;
-    cantEspaciosVacios= cantPosiciones - cantEspeciales;
-
-    if(cantEspaciosVacios <0)
-        return ERROR_ARCH_MAL_FORMADO;
-
-    pCaravana=fopen(archCaravana,"wt");
-    if(!pCaravana)
-        return ERROR_ARCHIVO;
-
-    caracterAInsertar='I';
-    insUltListDobCirc(pldc,&caracterAInsertar,sizeof(char)); //siempre primero cargo el inicio
-    fprintf(pCaravana,"%02d:[%c J]\n",posIterativa,caracterAInsertar);
-    posIterativa++;
-    while(cantPosiciones>0)
-    {
-        caracterAInsertar=extraerElementoAlAzar(&cantBandidos,&cantPremios,&cantVidasExtras,&cantOasis,&cantTormentas,&cantEspaciosVacios,cantPosiciones);
-
-        insUltListDobCirc(pldc,&caracterAInsertar,sizeof(char));
-        fprintf(pCaravana,"%02d:%c\n",posIterativa,caracterAInsertar);
-        cantPosiciones--;
-        posIterativa++;
-
+    if (estado->vidasActuales <= 0) {
+        printf("\nResultado: Sin vidas! La caravana no llego a destino.\n");
+    } else {
+        printf("\nResultado: Llegaste a la Ciudad Refugio!\n");
     }
-    caracterAInsertar='S';
-    insUltListDobCirc(pldc,&caracterAInsertar,sizeof(char));
-    fprintf(pCaravana,"%02d:%c\n",posIterativa,caracterAInsertar);
-    fclose(pCaravana);
-    return 1;
+
+    printf("\n=====================================\n");
+    printf("Presiona cualquier tecla para continuar...\n");
+    getch();
+
+    mostrarHistorialMovimientos();
+
+    printf("\nPresiona cualquier tecla para volver al menu...\n");
+    getch();
 }

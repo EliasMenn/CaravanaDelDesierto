@@ -1,23 +1,54 @@
 #ifndef JUEGO_H_INCLUDED
 #define JUEGO_H_INCLUDED
-#include "ListaDoEnCi.h"
-#include "cola.h"
-#include "jugador.h"
-#include "historicoPartidas.h" // Para poder generar el recibo al final
+
+#include "../macros/macros.h"
+#include "../headers/jugador.h"
+#include "../headers/ListaDoEnCi.h"
+#include "../headers/cola.h"
+#include "../headers/bandidos.h"
+#include "../headers/archivos.h"
+#include "../headers/interfaz.h"
+#include "../headers/ranking.h"
+#include "../headers/utiles.h"
 
 typedef struct {
-    tJugador jugador;       // Quién está jugando
-    tListaDobCirc* tablero;         // El tablero actual
-    tCola* colaMovimientos;       // Historial de "FX"(Forward X casillas) y "BX" (Backward X casillas)
-    int vidasActuales;            // Arranca en config.vidas_inicio
-    int puntosActuales;           // Los premios que va agarrando
-    int turnosJugados;            // Para contar los movimientos
-    int jugadorProtegido;         // Bandera (1 o 0) si pisó un Oasis
-    int perdioTurno;              // Bandera (1 o 0) si pisó Tormenta
-} tEstadoJuego;
-void iniciarJuego(tEstadoJuego* estado, const char* nombreJugador, const char* archTablero, const char* archJugadores);
-void mostrarTablero(tEstadoJuego* estado);
-void mostrarEstado(tEstadoJuego* estado);
-void realizarMovimiento(tEstadoJuego* estado, const char* movimiento);
-void finalizarJuego(tEstadoJuego* estado, const char* archJugadores, const char* archPartidas);
+    char tipoEntidad; // 'J' para Jugador, 'B' para Bandido
+    int id_entidad;   // Identificador del bandido (ej: 1, 2...). 0 para el jugador.
+    char direccion;   // 'F' para adelante (Forward), 'B' para atrás (Backward)
+    int pasos;        // Cantidad de posiciones a moverse (el valor del dado)
+    int posOrigen;
+} tMovimiento;
+
+typedef struct tEstadoJuego{
+    tJugador jugador;
+    tListaDobCirc* tablero;
+    tCola* colaMovimientos; //historial de FX y BX
+    int vidasActuales;
+    int puntosActuales;
+    int turnosJugados; //para contar los movimientos
+    int jugadorProtegido; //bandera si cayo en un oasis
+    int perdioTurno; //bandera si cayo en una tormenta
+    char terrenoBajoJugador; //para saber que habia debajo del jugador antes de moverse (B, P, V, O, T o .)
+    int colisionBandido; //bandera para saber si un bandido cayo sobre el jugador en su movimiento, se resetea cada turno
+    char terrenoBajoBandido[MAX_BANDIDOS];
+}tEstadoJuego;
+
+typedef struct
+{
+    int idJugador;
+    int puntosObtenidos;
+}tPartida;
+
+int tirar_dado(unsigned lados);
+void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov);
+int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio);
+void mostrarHistorialMovimientos();
+void bucleJuego(tEstadoJuego* estado, tConfig* config);
+void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores);
+void iniciarCaravanaDelDesierto();
+
+// funciones de tPartida
+int guardarPartida(tEstadoJuego* juegoActual, const char* nomArch);
+int actualizarJugador(tEstadoJuego* estado, const char* nomArch);
+
 #endif // JUEGO_H_INCLUDED

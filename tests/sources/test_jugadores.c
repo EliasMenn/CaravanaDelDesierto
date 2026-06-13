@@ -5,7 +5,6 @@
         tJugador jugador = {0};
         jugador.id = 1;
         strcpy(jugador.nombre, "Malcom");
-        jugador.puntosTotales = 26611;
         int res;
 
         printf("\nAgregamos un jugador nuevo");
@@ -25,7 +24,6 @@
 
         jugador.id = 2;
         strcpy(jugador.nombre, "Reese");
-        jugador.puntosTotales = 26611;
 
         printf("\nProbamos con otro jugador");
         res = jugadorExiste(jugador.id,ARCH_JUGADORES);

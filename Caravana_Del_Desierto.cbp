@@ -31,20 +31,22 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="headers/Indice.h" />
 		<Unit filename="headers/ListaDoEnCi.h" />
 		<Unit filename="headers/arbol.h" />
-		<Unit filename="headers/archJuego.h" />
+		<Unit filename="headers/archivos.h" />
 		<Unit filename="headers/bandidos.h" />
 		<Unit filename="headers/cola.h" />
-		<Unit filename="headers/configuracion.h" />
-		<Unit filename="headers/dado.h" />
-		<Unit filename="headers/historicoPartidas.h" />
 		<Unit filename="headers/interfaz.h" />
 		<Unit filename="headers/juego.h" />
 		<Unit filename="headers/jugador.h" />
-		<Unit filename="headers/menu.h" />
+		<Unit filename="headers/ranking.h" />
+		<Unit filename="headers/utiles.h" />
 		<Unit filename="macros/macros.h" />
 		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/Indice.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/ListaDoEnCi.c">
@@ -53,22 +55,13 @@
 		<Unit filename="sources/arbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sources/archJuego.c">
+		<Unit filename="sources/archivos.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/bandidos.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/cola.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sources/configuracion.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sources/dado.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sources/historicoPartidas.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/interfaz.c">
@@ -80,7 +73,10 @@
 		<Unit filename="sources/jugador.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sources/menu.c">
+		<Unit filename="sources/ranking.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/utiles.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tests/sources/test_jugadores.c">

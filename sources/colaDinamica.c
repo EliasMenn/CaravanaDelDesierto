@@ -1,4 +1,4 @@
-#include "../headers/cola.h"
+#include "colaDinamica.h"
 
 void crearCola(tCola* cola)
 {
@@ -9,21 +9,23 @@ void crearCola(tCola* cola)
 int colaVacia(const tCola* cola)
 {
     if(cola->pri == NULL)
+    {
         return COLA_VACIA;
-
+    }
     return COLA_NO_VACIA;
 }
 
 int colaLlena(const tCola* cola, unsigned tamDato)
 {
+
     tNodo* aux = (tNodo*)malloc(sizeof(tNodo));
 
-    if(aux == NULL)
+    if(!aux)
         return COLA_LLENA;
 
     aux->dato = malloc(tamDato);
 
-    if(aux->dato == NULL)
+    if(!aux->dato)
     {
         free(aux);
         return COLA_LLENA;
@@ -40,14 +42,16 @@ int aColar(tCola* cola, const void* dato, unsigned tam)
     tNodo* aux = (tNodo*)malloc(sizeof(tNodo));
 
     if(aux == NULL)
-        return ERROR_MEM;
+    {
+        return ERROR_MEMORIA;
+    }
 
     aux->dato = malloc(tam);
 
     if(aux->dato == NULL)
     {
         free(aux);
-        return ERROR_MEM;
+        return ERROR_MEMORIA;
     }
 
     memcpy(aux->dato,dato, tam);
@@ -55,32 +59,39 @@ int aColar(tCola* cola, const void* dato, unsigned tam)
     aux->sig = NULL;
 
     if(cola->pri == NULL)
+    {
         cola->pri = aux;
-
+    }
     else
+    {
         cola->ult->sig = aux;
+    }
 
     cola->ult = aux;
 
-    return EXITO;
+    return TODO_OK;
 }
 
 int verTope(const tCola* cola, void *dato, unsigned tam)
 {
 
     if(cola->pri == NULL)
+    {
         return COLA_VACIA;
+    }
 
     tNodo* aux = cola->pri;
     memcpy(dato,aux->dato,MIN(aux->tam,tam));
 
-    return EXITO;
+    return TODO_OK;
 }
 
 int outCola(tCola* cola, void* dato, unsigned tam)
 {
     if(cola->pri == NULL)
+    {
         return COLA_VACIA;
+    }
 
     tNodo* aux = cola->pri;
 
@@ -92,9 +103,11 @@ int outCola(tCola* cola, void* dato, unsigned tam)
     free(aux);
 
     if(cola->pri == NULL)
+    {
         cola->ult = NULL;
+    }
 
-    return EXITO;
+    return TODO_OK;
 }
 
 void vaciarCola(tCola* cola)
@@ -110,4 +123,3 @@ void vaciarCola(tCola* cola)
 
     cola->ult = NULL;
 }
-

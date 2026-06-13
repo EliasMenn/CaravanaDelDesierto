@@ -1,8 +1,4 @@
-#include "headers/jugador.h"
-#include "headers/menu.h"
-#include "headers/dado.h"
-#include "tests/tests.h"
-#include "headers/interfaz.h"
+#include "./headers/juego.h"
 
   void mostrarString(const void* datoLista)
     {
@@ -12,22 +8,8 @@
     }
 int main(int argc, char *argv[])
 {
-    /*if (argc > 1 && strcmp(argv[1], "test") == 0)
-    {
-        return main_test();
-    }
-    */
-
-
-    tListaDobCirc pldc;
-    tConfig config;
-    crearLista(&pldc);
-    creacionArchivoCaravana("caravana.txt",&pldc,&config);
-    recorrerListaDobCirc(&pldc,mostrarString);
-
+    iniciarCaravanaDelDesierto();
     return 0;
-
-
 }
 
 ///TESTEOS
@@ -66,4 +48,32 @@ int main(int argc, char *argv[])
     crearLista(&pldc);
     creacionArchivoCaravana("caravana.txt",&pldc,&config);
     recorrerListaDobCirc(&pldc,mostrarString);
+
+
+
+
+
+
+
+
+
+
+
+
+    if (argc > 1 && strcmp(argv[1], "test") == 0)
+    {
+        return main_test();
+    }
+    else
+    {
+
+    }
+    return 0;
+
+
+
+
+
+
+
 */

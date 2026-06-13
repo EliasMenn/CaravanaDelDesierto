@@ -2,8 +2,7 @@
 #define TESTS_H_INCLUDED
 
 #include "../headers/jugador.h"
-#include "../headers/dado.h"
-#include "../headers/menu.h"
+#include "../headers/interfaz.h"
 
 int main_test();
 int test_jugador();
