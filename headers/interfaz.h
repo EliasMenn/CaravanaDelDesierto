@@ -8,9 +8,10 @@
 //tEstadoJuego esta declarada en "juego.h"
 typedef struct tEstadoJuego tEstadoJuego;
 
+struct sPosiciones;
 char menuPrincipal(const char *mensaje, const char *opciones);
 char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasExtras, int *cantOasis, int *cantTormentas, int *vacios, int restantes);
-void mostrarTablero(tEstadoJuego* estado);
+void mostrarTablero(tEstadoJuego* estado, struct sPosiciones* pos);
 void mostrarPantallaFinPartida(tEstadoJuego* estado);
 
 #endif // INTERFAZ_H_INCLUDED

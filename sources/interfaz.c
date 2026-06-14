@@ -23,7 +23,7 @@ char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasEx
     srand(time(NULL));
     int r = rand() % restantes;
 
-    // Evaluamos y si no es, le restamos el bloque a 'r' y pasamos al siguiente.
+
     if (r < *cantBandidos)
     {
         (*cantBandidos)--;
@@ -59,33 +59,64 @@ char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasEx
     }
     r -= *cantTormentas;
 
-    // Si no cayo en ninguno de los anteriores, es un espacio vacio
     (*vacios)--;
     return '.';
 }
 
-void mostrarTablero(tEstadoJuego* estado) {
+void mostrarTablero(tEstadoJuego* estado, tPosiciones* pos)
+{
     tNodoDob* actual = *(estado->tablero);
-    int posicion = 1;
-    if (!actual) return;
+    int posicion = 1,contadorBandidos=0,flagBandidos=0,i=0;
+    char caracter;
+    if (!actual)
+        return;
     do {
-        char c = *(char*)(actual->info);
+        caracter = *(char*)(actual->info);
 
         // Si hay que imprimir al jugador, armamos el casillero compuesto
-        if (c == 'J') {
-            // Si pisamos tierra vacía ('.'), premio consumido o inicio, mostramos solo [J] o [I J]
-            if (estado->terrenoBajoJugador == '.' || estado->terrenoBajoJugador == 'I') {
-                if (estado->terrenoBajoJugador == 'I') printf("%02d:[I J]\n", posicion);
-                else printf("%02d:[J]\n", posicion);
+        if (caracter == 'J')
+        {
+            if (estado->terrenoBajoJugador == '.' || estado->terrenoBajoJugador == 'I')
+            {
+                if (estado->terrenoBajoJugador == 'I')
+                    printf("%02d:[I J]\n", posicion);
+                else
+                    printf("%02d:[J]\n", posicion);
             }
-            // Si pisamos Oasis o Tormenta, mostramos ambas letras combinadas
-            else {
+            else
                 printf("%02d:[%c J]\n", posicion, estado->terrenoBajoJugador);
-            }
         }
-        // Si no es el jugador, imprimimos la letra suelta (O, T, P, V, B, .)
-        else {
-            printf("%02d:%c\n", posicion, c);
+        else if (caracter == 'B')
+        {
+            int idReal = contadorBandidos;
+
+            if (pos != NULL && pos->posBandidos != NULL)
+            {
+                while( i < pos->cantBandidos && flagBandidos==0)
+                {
+                    if (*(pos->posBandidos + i) == posicion - 1 )
+                    {
+                        idReal = i;
+                        flagBandidos=1;
+                    }
+                    i++;
+                }
+            }
+
+            char terreno = *(estado->terrenoBajoBandido + idReal);
+
+            if (terreno == '.')
+                printf("%02d:B\n", posicion);
+            else
+                printf("%02d:[%c B]\n", posicion, terreno);
+
+            contadorBandidos++;
+        }
+        // ---> ESTE ES EL BLOQUE QUE TE FALTA <---
+        else
+        {
+            // Si no es ni el jugador ni un bandido, imprime el casillero normal
+            printf("%02d:%c\n", posicion, caracter);
         }
 
         actual = actual->sig;
@@ -101,8 +132,10 @@ void mostrarTablero(tEstadoJuego* estado) {
            estado->turnosJugados);
 
     // Indicador visual si está protegido por el oasis o atrapado en tormenta
-    if (estado->jugadorProtegido) printf(" [ESTADO: Protegido por el Oasis]\n");
-    if (estado->perdioTurno) printf(" [ESTADO: Atrapado en Tormenta de Arena]\n");
+    if (estado->jugadorProtegido)
+        printf(" [ESTADO: Protegido por el Oasis]\n");
+    if (estado->perdioTurno)
+        printf(" [ESTADO: Atrapado en Tormenta de Arena]\n");
     printf("======================================================\n");
 }
 

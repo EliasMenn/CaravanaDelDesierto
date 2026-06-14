@@ -39,14 +39,18 @@ typedef struct
     int puntosObtenidos;
 }tPartida;
 
+struct sPosiciones;
+
 int tirar_dado(unsigned lados);
-void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov);
-int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio);
+void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,struct sPosiciones* pos);
+int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,struct sPosiciones* pos);
 void mostrarHistorialMovimientos();
 void bucleJuego(tEstadoJuego* estado, tConfig* config);
 void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores);
 void iniciarCaravanaDelDesierto();
-
+tNodoDob* calcularNodoDestino(tEstadoJuego* estado, tMovimiento* mov, tNodoDob* nodoActual);
+void movimientoVisual(tEstadoJuego* estado,tMovimiento* mov,tNodoDob* nodoActual,tNodoDob* nodoDestino, int offset);
+void sincronizarBandidosApilados(tEstadoJuego* estado, struct sPosiciones* pos);
 // funciones de tPartida
 int guardarPartida(tEstadoJuego* juegoActual, const char* nomArch);
 int actualizarJugador(tEstadoJuego* estado, const char* nomArch);

@@ -3,13 +3,12 @@
 
 #include "../headers/archivos.h"
 #include "../headers/interfaz.h"
-#include "../headers/juego.h"
 #include "../headers/jugador.h"
 #include "../headers/ListaDoEnCi.h"
 #include "../headers/cola.h"
 #include "../macros/macros.h"
 
-typedef struct
+typedef struct sPosiciones
 {
     int TamTablero;
     int posActual;

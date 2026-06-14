@@ -9,10 +9,8 @@ int definirPosiciones(tPosiciones *pos, const char* archConfig)
     pos->capacidadBandidos = configuracion.maximoBandidos;
     pos->posBandidos = (int*)malloc(sizeof(int)*pos->capacidadBandidos);
     if(pos->posBandidos == NULL)
-    {
-        // free innecesario ya que si posBandidos es NULL no reservo la memoria
         return ERROR_MEM;
-    }
+
 
     pos->TamTablero = configuracion.cantPosiciones;
     pos->cantBandidos = 0;
@@ -29,32 +27,37 @@ void actualizarPosiciones(tListaDobCirc *pLista, tPosiciones *pos)
 
 void calcularMovimientos(tPosiciones *pos, tCola *cola)
 {
-    int mov;
-    int *pBandido = pos->posBandidos;
-    int *pFinBandidos = pos->posBandidos + pos->cantBandidos;
-    int idBandido = 1;
+    int mov,izq, der,idBandido,*pBandido,*pFinBandidos;
+    tMovimiento movBandido;
 
-    while (pBandido < pFinBandidos)
+    pBandido = pos->posBandidos;
+    pFinBandidos = pos->posBandidos + pos->cantBandidos;
+    idBandido = 1; // primer id asignado a los bandidos
+
+    while(pBandido < pFinBandidos)
     {
-        mov = tirar_dado(CARAS_DADO);
+        if(*pBandido != -1)
+        {
 
-        //como el mapa es una linea estatica, van directo hacia el jugador
-        char dirCalculada;
-        if(pos->posJugador >= *pBandido) {
-            dirCalculada = 'F';
-        } else {
-            dirCalculada = 'B';
+            mov = tirar_dado(CARAS_DADO);
+
+            der = (pos->posJugador - *pBandido + pos->TamTablero) % pos->TamTablero;
+            izq = (*pBandido - pos->posJugador + pos->TamTablero) % pos->TamTablero;
+
+
+            movBandido.tipoEntidad = 'B';
+            movBandido.id_entidad = idBandido;
+            movBandido.pasos = mov;
+            movBandido.posOrigen = *pBandido;
+
+            if(der <= izq)
+                movBandido.direccion = 'F';
+            else
+                movBandido.direccion = 'B';
+
+            aColar(cola, &movBandido, sizeof(tMovimiento));
+
         }
-
-        tMovimiento movBandido;
-        movBandido.tipoEntidad = 'B';
-        movBandido.id_entidad = idBandido;
-        movBandido.direccion = dirCalculada;
-        movBandido.pasos = mov;
-        movBandido.posOrigen = *pBandido; // El GPS para no perder memoria
-
-        aColar(cola, &movBandido, sizeof(tMovimiento));
-
         pBandido++;
         idBandido++;
     }
@@ -79,4 +82,5 @@ void encontrarPosiciones(const void* dato, void* contexto)
     }
     pos->posActual++;
 }
+
 

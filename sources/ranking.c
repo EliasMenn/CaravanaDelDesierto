@@ -39,7 +39,8 @@ void mostrarRanking()
 
     //abre el archivo de jugadores. Si esta vacio no muestra nada y da la opcion de volver al menu
     archJugadores = fopen(ARCH_JUGADORES, "rb");
-    if(!archJugadores) {
+    if(!archJugadores)
+    {
         puts("No hay jugadores registrados aun.");
         puts("\nPresiona cualquier tecla para volver al menu...");
         getch();
@@ -60,7 +61,8 @@ void mostrarRanking()
     }
 
     jugadores = (tJugador*)malloc(cantJugadores*sizeof(tJugador));
-    if (!jugadores){
+    if (!jugadores)
+    {
         fclose(archJugadores);
         puts("Error de memoria.");
         puts("\nPresiona cualquier tecla para volver al menu...");
@@ -86,7 +88,6 @@ void mostrarRanking()
     if(!archPartida){
         free(jugadores);
         free(puntajes);
-        fclose(archJugadores);
         puts("Error al abrir el archivo de partidas.");
         puts("\nPresiona cualquier tecla para volver al menu...");
         getch();
@@ -111,7 +112,7 @@ void mostrarRanking()
         entrada.puntajeTotal = *(puntajes + i);
         entrada.partidasJugadas = (*(jugadores + i)).partidasJugadas;
         strncpy(entrada.nombre, (*(jugadores + i)).nombre, 50);
-        entrada.nombre[50] = '\0';
+        entrada.nombre[49] = '\0';
 
         insertarEnArbol(&arbolRanking, &entrada, sizeof(tNodoRanking), cmpRanking);
     }

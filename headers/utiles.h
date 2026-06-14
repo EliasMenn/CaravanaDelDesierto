@@ -7,7 +7,7 @@
 //tEstadoJuego esta declarada en "juego.h"
 typedef struct tEstadoJuego tEstadoJuego;
 
-tNodoDob* buscarNodoEntidad(tListaDobCirc* tablero, char entidad, int id_entidad);
+tNodoDob* buscarNodoEntidad(tListaDobCirc* tablero, char entidad);
 int contieneEntidad(tNodoDob* nodo, char entidad);
 void removerEntidadDeNodo(tNodoDob* nodo, char entidad, int id_entidad);
 void agregarEntidadANodo(tNodoDob* nodo, char entidad, int id_entidad);

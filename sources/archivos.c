@@ -25,10 +25,12 @@ int cargarConfiguracion(tConfig* config, const char* archConfig)
     FILE* pconfig=fopen(archConfig,"rt");
     if(!pconfig)
     {
+        free(linea);
         return ERROR_ARCHIVO;
     }
 
-    if (fgets(linea, MAX_LINEA, pconfig) == NULL) {
+    if (fgets(linea, MAX_LINEA, pconfig) == NULL)
+    {
         fclose(pconfig);
         free(linea);
         return ERROR_ARCHIVO;

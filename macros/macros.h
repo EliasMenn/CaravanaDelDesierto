@@ -42,8 +42,8 @@
 
 //juego.h
 #define ARCH_INDICE_JUGADORES "ix_nomJugador.bin"
-#define TAM_LINEA_MOV 10
-
+#define TAM_LINEA_MOV 30
+#define toUpper(x) (((x)>96 && (x)<123)? ((x)-32): (x))
 //bandidos.h
 #define MAX_BANDIDOS 10
 
