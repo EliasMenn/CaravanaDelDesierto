@@ -16,8 +16,7 @@ typedef struct {
     int partidasJugadas;
 } tJugador;
 
-int guardarJugador(tJugador* jugador, const char* archJugadores);
-int jugadorExiste(int id, const char* archJugadores);
+int guardarJugador(tJugador* jugador,const char* archJugadores,const tArbol* indice,Cmp cmp);
 int BuscarNombreJugador(char* nombre, const tArbol* jugadores, Cmp cmp, int* posEncontrada);
 
 #endif // JUGADOR_H_INCLUDED

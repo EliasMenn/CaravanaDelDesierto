@@ -10,7 +10,8 @@ int contarNodosEnIndice(tArbol* indice)
 
 int insertarEnIndice(tArbol* indice, char* nom, unsigned tamNom,Cmp cmp)
 {
-    if(*indice){
+    if(*indice)
+    {
         if(cmp((*indice)->dato, nom) > 0)
             return insertarEnArbol(&(*indice)->izq, nom, tamNom, cmp);
 
@@ -26,7 +27,8 @@ int insertarEnIndice(tArbol* indice, char* nom, unsigned tamNom,Cmp cmp)
         return ERROR_MEM;
 
     (*indice)->dato = malloc(tamNom);
-    if(!(*indice)->dato){
+    if(!(*indice)->dato)
+    {
         free(*indice);
         return ERROR_MEM;
     }
@@ -61,6 +63,7 @@ int cargarIndiceJugadores(tArbol* indice, const char* archIndice,unsigned tamDat
 
 int buscarEnIndice(const tArbol* indice, char* nombre, Cmp cmp, int* posEncontrada)
 {
+    tIndice* registroEncontrado;
     if(!*indice)
         return NO_EXISTE;
 
@@ -72,7 +75,7 @@ int buscarEnIndice(const tArbol* indice, char* nombre, Cmp cmp, int* posEncontra
         return buscarEnIndice(&(*indice)->der, nombre, cmp, posEncontrada);
 
     //lo encontro, se guarda la posición en el puntero y se devuelve EXITO
-    tIndice* registroEncontrado = (tIndice*)((*indice)->dato);
+    registroEncontrado = (tIndice*)((*indice)->dato);
     *posEncontrada = registroEncontrado->pos;
     return EXITO;
 }

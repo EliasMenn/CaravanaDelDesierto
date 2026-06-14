@@ -1,9 +1,10 @@
 #include "../headers/jugador.h"
 
-int guardarJugador(tJugador* jugador,const char* archJugadores)
+int guardarJugador(tJugador* jugador,const char* archJugadores,const tArbol* indice,Cmp cmp)
 {
     FILE* pj;
-    if(jugadorExiste(jugador->id,archJugadores) == DUPLICADO)
+    int pos;
+    if(buscarEnIndice(indice,jugador->nombre,cmp,&pos) == EXITO)
         return DUPLICADO;
 
     pj = fopen(archJugadores,"ab");
@@ -16,25 +17,7 @@ int guardarJugador(tJugador* jugador,const char* archJugadores)
     return EXITO;
 }
 
-int jugadorExiste(int id,const char* archJugadores)///LOGICA PROVISORIA, CUANDO VEAMOS INDICES SOBRE ARBOLES BINARIOS VAMOS A TENER QUE MANEJARLO CON ESO (PARA NO RECORRER EL ARCHIVO)
-{
-    tJugador jugador;
-    FILE* pf=fopen(archJugadores,"rb");
-    if (!(pf))
-        return ERROR_ARCHIVO;
 
-    while(fread(&jugador, sizeof(tJugador), 1, pf) == 1)
-    {
-        if(jugador.id == id)
-        {
-            fclose(pf);
-            return DUPLICADO;  // ya existe
-        }
-    }
-
-    fclose(pf);
-    return 1;  // no existe
-}
 
 
 int BuscarNombreJugador(char* nombre, const tArbol* jugadores, Cmp cmp, int* posEncontrada)

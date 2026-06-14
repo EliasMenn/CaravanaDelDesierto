@@ -76,10 +76,6 @@ void encontrarPosiciones(const void* dato, void* contexto)
     {
         pos->posJugador = pos->posActual;
     }
-    else if(caracterComp == 'I')
-    {
-        pos->posI = pos->posActual;
-    }
     pos->posActual++;
 }
 

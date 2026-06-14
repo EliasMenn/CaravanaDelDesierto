@@ -1,5 +1,28 @@
 #include "..\headers\juego.h"
 
+int cmpCaracteres(const void* entidad, const void* caracterEnNodo)
+{
+    char* aux1=(char*)entidad;
+    char* aux2=(char*)caracterEnNodo;
+    return (*aux1) - (*aux2);
+}
+
+int cmp(const void* d1,const void* d2)
+{
+    tIndice* auxIndice1=(tIndice*)d1;
+    tIndice* auxIndice2=(tIndice*)d2;
+
+    return strcmpi(auxIndice1->clave,auxIndice2->clave);
+}
+
+
+int tirar_dado(unsigned lados)
+{
+    srand(time(NULL));
+    return rand() % lados + 1;
+}
+
+
 void iniciarCaravanaDelDesierto()
 {
     tListaDobCirc tablero;
@@ -20,10 +43,10 @@ void iniciarCaravanaDelDesierto()
     char opcion = menuPrincipal(MENSAJE_MENU_PRINCIPAL, OPCIONES_MENU_PRINCIPAL);
     while(opcion != SALIR)
     {
-        //se limpia el tablero de la partida anterior
 
         if(opcion == NUEVA_PARTIDA)
         {
+            //se limpia el tablero de la partida anterior y la cola de movimientos
             VaciarListaDobCirc(&tablero);
             vaciarCola(&colaMov);
             creacionArchivoCaravana(ARCH_CARAVANA, estado.tablero, &configuracion);
@@ -50,38 +73,25 @@ void iniciarCaravanaDelDesierto()
     puts("Muchas gracias por jugar! Vuelva pronto!");
 }
 
-int tirar_dado(unsigned lados)
-{
-    srand(time(NULL));
-    return rand() % lados + 1;
-}
-
-int cmp(const void* d1,const void* d2)
-{
-    tIndice* auxIndice1=(tIndice*)d1;
-    tIndice* auxIndice2=(tIndice*)d2;
-
-    return strcmpi(auxIndice1->clave,auxIndice2->clave);
-}
 
 void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,tPosiciones* pos)
 {
     tNodoDob*nodoActual,* nodoDestino,*aux;
     int offset,i,nuevaPos;
-
+    char entidadBuscada;
 
     if (!estado->tablero || !*(estado->tablero)) // nos pasaron un null o no existe el tablero
         return;
 
-    //asignacion de datos a variables;
+    //asignacion de contenido a variables;
     nodoActual=NULL;
     offset=0;
     i=0;
     nuevaPos=0;
 
     if (mov->tipoEntidad == 'J')
-    {
-        if(!(nodoActual = buscarNodoEntidad(estado->tablero, 'J')))
+    {   entidadBuscada='J';
+        if(!(nodoActual = buscarNodoEntidad(estado->tablero, &entidadBuscada,cmpCaracteres)))
             return;
 
     }
@@ -124,6 +134,44 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,tPosiciones
     movimientoVisual(estado,mov,nodoActual,nodoDestino,offset);
 
 
+}
+
+
+tNodoDob* calcularNodoDestino(tEstadoJuego* estado, tMovimiento* mov, tNodoDob* nodoActual)
+{
+    int pasosRestantes = mov->pasos,moviValido = 0;
+    char direccionActual = mov->direccion;
+    tNodoDob* nodoDestino = nodoActual,*posibleDestino;
+
+    while (pasosRestantes > 0 && moviValido == 0)
+    {
+        if (toUpper(direccionActual) == 'F')
+            posibleDestino = nodoDestino->sig;
+        else
+            posibleDestino = nodoDestino->ant;
+
+        // LOGICA DE JUGADOR
+        if (mov->tipoEntidad == 'J')
+        {
+
+            if (toUpper(direccionActual) == 'F' && posibleDestino == *(estado->tablero))
+            {
+                direccionActual = 'B';
+                posibleDestino = nodoDestino->ant;
+            }
+            else if (toUpper(direccionActual) == 'B' && posibleDestino == (*(estado->tablero))->ant)
+            {
+                moviValido = 1;
+            }
+        }
+        // Si el movimiento es válido, avanza un casillero
+        if (moviValido == 0)
+        {
+            nodoDestino = posibleDestino;
+            pasosRestantes--;
+        }
+    }
+    return nodoDestino;
 }
 
 void movimientoVisual(tEstadoJuego* estado,tMovimiento* mov,tNodoDob* nodoActual,tNodoDob* nodoDestino, int offset)
@@ -175,49 +223,11 @@ void movimientoVisual(tEstadoJuego* estado,tMovimiento* mov,tNodoDob* nodoActual
     }
 }
 
-tNodoDob* calcularNodoDestino(tEstadoJuego* estado, tMovimiento* mov, tNodoDob* nodoActual)
-{
-    int pasosRestantes = mov->pasos,moviValido = 0;
-    char direccionActual = mov->direccion;
-    tNodoDob* nodoDestino = nodoActual,*posibleDestino;
-
-    while (pasosRestantes > 0 && moviValido == 0)
-    {
-        if (toUpper(direccionActual) == 'F')
-            posibleDestino = nodoDestino->sig;
-        else
-            posibleDestino = nodoDestino->ant;
-
-        // LOGICA DE JUGADOR
-        if (mov->tipoEntidad == 'J')
-        {
-
-            if (toUpper(direccionActual) == 'F' && posibleDestino == *(estado->tablero))
-            {
-                direccionActual = 'B';
-                posibleDestino = nodoDestino->ant;
-            }
-            else if (toUpper(direccionActual) == 'B' && posibleDestino == (*(estado->tablero))->ant)
-            {
-                moviValido = 1;
-            }
-        }
-        // Si el movimiento es válido, avanza un casillero
-        if (moviValido == 0)
-        {
-            nodoDestino = posibleDestino;
-            pasosRestantes--;
-        }
-    }
-    return nodoDestino;
-}
-
-
-
 int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,tPosiciones* pos)
 {
     int indiceChoque,i=0,flagMarca=0;
-    tNodoDob* nodoActual,*aux;
+    tNodoDob* nodoActual,*aux,*nodoInicio;
+    char entidadBuscada;
     if (estado->terrenoBajoJugador == 'S')
     {
         printf("\nFelicidades! Has llegado a la Ciudad Refugio.\n");
@@ -237,8 +247,8 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,tPosiciones* p
         {
             estado->vidasActuales--;
             printf("\nUn bandido te ha interceptado! Pierdes una vida. Te quedan %d vidas.\n", estado->vidasActuales);
-
-            nodoActual = buscarNodoEntidad((estado->tablero), 'J');
+            entidadBuscada='J';
+            nodoActual = buscarNodoEntidad((estado->tablero),&entidadBuscada,cmpCaracteres);
             if(nodoActual != NULL)
             {
 
@@ -267,16 +277,16 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,tPosiciones* p
             else
             {
                 // Si por algún error visual la 'J' desapareció, la forzamos a reaparecer en el inicio
-                tNodoDob* nodoInicio = *(estado->tablero);
+                nodoInicio = *(estado->tablero);
                 estado->terrenoBajoJugador = *(char*)(nodoInicio->info);
                 *(char*)(nodoInicio->info) = 'J';
             }
 
-            // Identificamos la posicion del bandido a eliminar
+            // Si hubo colision y nos quedamos sin vida salimos de la funcion (se terminó el juego)
             if (estado->vidasActuales <= 0)
-                return 1;
+                return TERMINO_PARTIDA;
 
-            return 0;
+            return SIGUE_PARTIDA;
         }
     }
 
@@ -322,7 +332,7 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,tPosiciones* p
     else
         estado->jugadorProtegido = 0;
 
-    return 0;
+    return SIGUE_PARTIDA;
 }
 
 void mostrarHistorialMovimientos()
@@ -357,9 +367,8 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config)
         return;
     }
     // escaner inicial para los bandidos
-    pos.cantBandidos = 0;
-    pos.posActual = 0;
     actualizarPosiciones(estado->tablero, &pos);
+
     while (!finPartida)
     {
         jugadorSeMovio = 0;
@@ -413,9 +422,6 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config)
         {
             if (*(char*)(buscador->info) == 'J')
                 pos.posJugador = indiceCasillero;
-            if (*(char*)(buscador->info) == 'I')
-                pos.posI = indiceCasillero;
-
             buscador = buscador->sig;
             indiceCasillero++;
         }while (buscador != *(estado->tablero));
@@ -440,7 +446,7 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config)
         finPartida = verificarEstadoTurno(estado, jugadorSeMovio,&pos);
 
         // ACTUALIZAMOS PANTALLA
-        if (!finPartida)
+        if (finPartida==SIGUE_PARTIDA)
         {
             printf("\nPresiona cualquier tecla para continuar...\n");
             getch();
@@ -510,7 +516,7 @@ void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* j
     {
         jugadorTmp.id = contarNodosEnIndice(jugadores) + 1;
         jugadorTmp.partidasJugadas = 0;
-        guardarJugador(&jugadorTmp, ARCH_JUGADORES);
+        guardarJugador(&jugadorTmp, ARCH_JUGADORES,jugadores,cmp);
 
         strcpy(nuevoIndice.clave, jugadorTmp.nombre);
         nuevoIndice.pos = jugadorTmp.id - 1;

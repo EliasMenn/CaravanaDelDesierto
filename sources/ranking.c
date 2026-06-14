@@ -84,7 +84,7 @@ void mostrarRanking()
     fread(jugadores, sizeof(tJugador), cantJugadores, archJugadores);
     fclose(archJugadores);
 
-    archPartida = fopen("archivoPartidas.bin", "rb");
+    archPartida = fopen(ARCH_PARTIDAS, "rb");
     if(!archPartida){
         free(jugadores);
         free(puntajes);

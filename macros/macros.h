@@ -44,6 +44,8 @@
 #define ARCH_INDICE_JUGADORES "ix_nomJugador.bin"
 #define TAM_LINEA_MOV 30
 #define toUpper(x) (((x)>96 && (x)<123)? ((x)-32): (x))
+#define TERMINO_PARTIDA 1
+#define SIGUE_PARTIDA 0
 //bandidos.h
 #define MAX_BANDIDOS 10
 
@@ -55,5 +57,6 @@
 #define COLA_NO_VACIA 121
 #define COLA_LLENA 131
 #define COLA_NO_LLENA 141
+
 
 #endif //MACROS_H_INCLUDED

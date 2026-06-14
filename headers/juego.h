@@ -12,24 +12,24 @@
 #include "../headers/utiles.h"
 
 typedef struct {
-    char tipoEntidad; // 'J' para Jugador, 'B' para Bandido
-    int id_entidad;   // Identificador del bandido (ej: 1, 2...). 0 para el jugador.
-    char direccion;   // 'F' para adelante (Forward), 'B' para atrás (Backward)
-    int pasos;        // Cantidad de posiciones a moverse (el valor del dado)
+    char tipoEntidad;
+    int id_entidad;
+    char direccion;
+    int pasos;
     int posOrigen;
 } tMovimiento;
 
 typedef struct tEstadoJuego{
     tJugador jugador;
     tListaDobCirc* tablero;
-    tCola* colaMovimientos; //historial de FX y BX
+    tCola* colaMovimientos;
     int vidasActuales;
     int puntosActuales;
-    int turnosJugados; //para contar los movimientos
-    int jugadorProtegido; //bandera si cayo en un oasis
-    int perdioTurno; //bandera si cayo en una tormenta
-    char terrenoBajoJugador; //para saber que habia debajo del jugador antes de moverse (B, P, V, O, T o .)
-    int colisionBandido; //bandera para saber si un bandido cayo sobre el jugador en su movimiento, se resetea cada turno
+    int turnosJugados;
+    int jugadorProtegido;
+    int perdioTurno;
+    char terrenoBajoJugador;
+    int colisionBandido;
     char terrenoBajoBandido[MAX_BANDIDOS];
 }tEstadoJuego;
 

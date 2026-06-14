@@ -86,7 +86,7 @@ int creacionArchivoCaravana(const char* archCaravana, tListaDobCirc* pldc, tConf
         cantPremios=0,cantVidasExtras=0,
         cantEspeciales,cantEspaciosVacios,posIterativa=1;
 
-    if(!cargarConfiguracion(configuracion,"config.txt"))
+    if(!cargarConfiguracion(configuracion,ARCH_CONFIG))
         return ERROR_ARCHIVO;
     if(configuracion->cantPosiciones<2) // solo tiene posicion para inicio y fin, no se puede jugar
         return ARCH_CONFIG_MAL_FORMADO; //no se puede jugar

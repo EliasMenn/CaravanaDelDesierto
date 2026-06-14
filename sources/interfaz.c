@@ -103,21 +103,15 @@ void mostrarTablero(tEstadoJuego* estado, tPosiciones* pos)
                 }
             }
 
-            char terreno = *(estado->terrenoBajoBandido + idReal);
-
-            if (terreno == '.')
+            if ((*(estado->terrenoBajoBandido + idReal)) == '.')
                 printf("%02d:B\n", posicion);
             else
-                printf("%02d:[%c B]\n", posicion, terreno);
+                printf("%02d:[%c B]\n", posicion, (*(estado->terrenoBajoBandido + idReal)));
 
             contadorBandidos++;
         }
-        // ---> ESTE ES EL BLOQUE QUE TE FALTA <---
         else
-        {
-            // Si no es ni el jugador ni un bandido, imprime el casillero normal
             printf("%02d:%c\n", posicion, caracter);
-        }
 
         actual = actual->sig;
         posicion++;

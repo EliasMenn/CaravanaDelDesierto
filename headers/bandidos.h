@@ -12,7 +12,6 @@ typedef struct sPosiciones
 {
     int TamTablero;
     int posActual;
-    int posI;
     int posJugador;
     int *posBandidos;
     int capacidadBandidos;
