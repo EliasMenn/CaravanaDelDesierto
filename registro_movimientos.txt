@@ -1,14 +1,6 @@
 Direccion: F | Pasos: 4
-Direccion: F | Pasos: 3
-Direccion: F | Pasos: 1
-Direccion: F | Pasos: 1
+Direccion: F | Pasos: 5
 Direccion: F | Pasos: 2
-Direccion: F | Pasos: 3
 Direccion: F | Pasos: 5
-Direccion: F | Pasos: 1
-Direccion: F | Pasos: 5
-Direccion: F | Pasos: 5
-Direccion: F | Pasos: 3
-Direccion: F | Pasos: 3
-Direccion: F | Pasos: 4
-Direccion: F | Pasos: 5
+Direccion: F | Pasos: 2
+Direccion: F | Pasos: 6

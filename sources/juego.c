@@ -49,7 +49,12 @@ void iniciarCaravanaDelDesierto()
             //se limpia el tablero de la partida anterior y la cola de movimientos
             VaciarListaDobCirc(&tablero);
             vaciarCola(&colaMov);
-            creacionArchivoCaravana(ARCH_CARAVANA, estado.tablero, &configuracion);
+            if(creacionArchivoCaravana(ARCH_CARAVANA, estado.tablero, &configuracion)==ERROR_ARCHIVO)
+            {
+                printf("\n Para jugar se necesita contar si o si con un archivo config.txt! Por favor, para intentar jugar cree dicho archivo con los siguientes parametros (en orden) :\n 1- cantidad_posiciones \n 2- vidas_inicio \n 3- maximo_bandidos \n 4- maxmo_premios \n 5- maximo_vidas_extra \n 6- maximo_oasis \n 7- maximo_tormentas");
+                getch();
+                return;
+            }
             procesarInicioNuevaPartida(&estado, &configuracion, &indiceJugadores);
             bucleJuego(&estado, &configuracion);
 
