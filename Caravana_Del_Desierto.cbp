@@ -24,13 +24,23 @@
 					<Add option="-O2" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
+					<Add option="-lmingw32" />
+					<Add option="-libSDL3" />
+					<Add option="-lSDL3_ttf" />
+					<Add directory="lib" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="include" />
 		</Compiler>
+		<Linker>
+			<Add option="-lmingw32" />
+			<Add option="-lwinmm" />
+			<Add library="lib/libSDL3.a" />
+			<Add library="lib/libSDL3_ttf.a" />
+		</Linker>
 		<Unit filename="headers/Indice.h" />
 		<Unit filename="headers/ListaDoEnCi.h" />
 		<Unit filename="headers/arbol.h" />
@@ -41,6 +51,7 @@
 		<Unit filename="headers/juego.h" />
 		<Unit filename="headers/jugador.h" />
 		<Unit filename="headers/ranking.h" />
+		<Unit filename="headers/sdl_renderer.h" />
 		<Unit filename="headers/utiles.h" />
 		<Unit filename="macros/macros.h" />
 		<Unit filename="main.c">
@@ -74,6 +85,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/ranking.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sources/sdl_renderer.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sources/utiles.c">

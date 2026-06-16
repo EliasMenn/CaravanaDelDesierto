@@ -10,6 +10,9 @@
 #include "../headers/interfaz.h"
 #include "../headers/ranking.h"
 #include "../headers/utiles.h"
+#include "../headers/sdl_renderer.h"
+#include <windows.h>
+#include <mmsystem.h>
 
 typedef struct {
     char tipoEntidad;
@@ -43,11 +46,19 @@ struct sPosiciones;
 
 int tirar_dado(unsigned lados);
 void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,struct sPosiciones* pos);
-int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,struct sPosiciones* pos);
-void mostrarHistorialMovimientos();
-void bucleJuego(tEstadoJuego* estado, tConfig* config);
-void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores);
-void iniciarCaravanaDelDesierto();
+int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio, struct sPosiciones* pos, tSDLCtx* ctx);
+//int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,struct sPosiciones* pos);
+
+//void bucleJuego(tEstadoJuego* estado, tConfig* config);
+void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx);
+//void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores);
+void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores, tSDLCtx* ctx);
+
+//void mostrarHistorialMovimientos(); se borró porque se creó sdl_mostrarHistorial
+
+void iniciarCaravanaDelDesierto(tSDLCtx* ctx);
+
+
 tNodoDob* calcularNodoDestino(tEstadoJuego* estado, tMovimiento* mov, tNodoDob* nodoActual);
 void movimientoVisual(tEstadoJuego* estado,tMovimiento* mov,tNodoDob* nodoActual,tNodoDob* nodoDestino, int offset);
 void sincronizarBandidosApilados(tEstadoJuego* estado, struct sPosiciones* pos);
