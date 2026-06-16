@@ -43,9 +43,12 @@ El código fue diseñado para cumplir con los estándares académicos más estri
 **Dependencias:**
 * Compilador GCC / MinGW.
 * Entorno sugerido: Code::Blocks.
+* SDL3
+* SDL3_ttf
 
 **Instrucciones (Terminal):**
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/EliasMenn/CaravanaDelDesierto.git
+Descomprimir el .zip SDL3 en la carpeta raiz
 ```
