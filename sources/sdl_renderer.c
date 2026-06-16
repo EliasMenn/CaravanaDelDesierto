@@ -453,24 +453,27 @@ void sdl_presentar(tSDLCtx* ctx) {
 }
 
 void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx,
-                                       int esJugador, int esBandido) {
-    int x = CELL_GAP + idx * (CELL_W + CELL_GAP);
+                                       int esJugador, int esBandido, int totalCasilleros) {
+
+    // Calculamos el espacio total y el margen inicial
+    int anchoTotalTablero = totalCasilleros * CELL_W + (totalCasilleros - 1) * CELL_GAP;
+    int startX = (VENTANA_W - anchoTotalTablero) / 2;
+
+    // centrado
+    int x = startX + idx * (CELL_W + CELL_GAP);
     int y = BOARD_Y;
 
-    // 1. Si el terreno está vacío ('.'), le pasamos la inicial del personaje
     char terrenoFondo = tipo;
     if (tipo == '.') {
         if (esJugador) terrenoFondo = 'J';
         else if (esBandido) terrenoFondo = 'B';
     }
 
-    // Dibujamos el casillero base (se pintará de rojo si hay un bandido en arena vacía)
     dibujarCasillero(ctx->renderer, ctx->fuenteCell, x, y, terrenoFondo, idx, '.');
 
     int iconCX = x + CELL_W/2;
     int iconCY = y + CELL_H/2 - 4;
 
-    // 2. Dibujamos las entidades por encima del terreno
     if (esJugador) {
         dibujarCarruaje(ctx->renderer, iconCX, iconCY);
     }
@@ -478,14 +481,10 @@ void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx,
         dibujarBandido(ctx->renderer, iconCX, iconCY);
     }
 
-    // 3. ETIQUETAS INFERIORES [X Y]
-    // AHORA SOLO SE MUESTRAN SI EL TERRENO NO ES UN PUNTO ('.')
     if ((esJugador || esBandido) && tipo != '.') {
         char entidad = esJugador ? 'J' : 'B';
         char label[16];
-
         SDL_snprintf(label, sizeof(label), "[%c %c]", tipo, entidad);
-
         drawText(ctx->renderer, ctx->fuenteCell, label, x + CELL_W/2, y + CELL_H + 15, (SDL_Color){220, 200, 150, 255}, 1);
     }
 }

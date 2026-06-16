@@ -40,7 +40,7 @@ void sdl_cerrar(tSDLCtx* ctx);
 
 // Renderizado principal
 void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx,
-                                       int esJugador, int esBandido);
+                                       int esJugador, int esBandido, int totalCasilleros);
 
 
 void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
