@@ -1,6 +1,6 @@
 #ifndef JUGADOR_H_INCLUDED
 #define JUGADOR_H_INCLUDED
-#define __USE_MINGW_ANSI_STDIO 1
+
 
 #include <stdio.h>
 #include <stdlib.h>

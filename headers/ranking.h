@@ -8,6 +8,7 @@
 #include "../macros/macros.h"
 #include "../headers/jugador.h"
 #include "../headers/juego.h"
+#include "../headers/sdl_renderer.h"
 
 typedef struct {
     int  puntajeTotal;
@@ -20,10 +21,11 @@ typedef struct {
 typedef struct {
     int total;
     int actual;
+    tSDLCtx* sdlCtx;
 } tContextoRanking;
 
 int cmpRanking(const void* a, const void* b);
 void imprimirNodoRanking(void* dato, void* contexto);
-void mostrarRanking();
+void mostrarRanking(tSDLCtx* ctx);
 
 #endif // RANKING_H_INCLUDED

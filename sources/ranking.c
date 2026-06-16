@@ -1,6 +1,5 @@
 #include "../headers/ranking.h"
 
-//ordena por puntaje total ascendente. Si hubo empate ordena por nombre
 int cmpRanking(const void* a, const void* b)
 {
     const tNodoRanking* na = (const tNodoRanking *)a;
@@ -11,18 +10,32 @@ int cmpRanking(const void* a, const void* b)
     return strcmpi(na->nombre, nb->nombre);
 }
 
-//como el arbol esta ordenado de menor a mayor, el primer nodo es el de menor puntaje, le corresponde la ultima posicion.
-void imprimirNodoRanking(void* dato, void* contexto)
+// Ahora esta funcion es llamada por el arbol, pero en vez de hacer printf, llama a SDL
+void imprimirNodoRankingGrafico(void* dato, void* contexto)
 {
     tNodoRanking *nodo = (tNodoRanking *)dato;
     tContextoRanking *ctx = (tContextoRanking *)contexto;
 
     int posicion = ctx->total - ctx->actual + 1;
-    printf(" %-5d %-20s %-14d %-10d\n", posicion, nodo->nombre, nodo->puntajeTotal, nodo->partidasJugadas);
+
+    // Solo pedimos dibujar a los mejores 15 para que no desborde hacia abajo la ventana
+    if (posicion <= 15) {
+        // La Posicion 1 caera en Y=192, la 2 en Y=224, etc
+        int y = 160 + (posicion * 32);
+
+        char posStr[16], ptsStr[16], partStr[16];
+        SDL_snprintf(posStr, sizeof(posStr), "%d", posicion);
+        SDL_snprintf(ptsStr, sizeof(ptsStr), "%d", nodo->puntajeTotal);
+        SDL_snprintf(partStr, sizeof(partStr), "%d", nodo->partidasJugadas);
+
+        // Directamente mandamos los strings crudos al motor grafico
+        sdl_dibujarFilaRanking(ctx->sdlCtx, posStr, nodo->nombre, ptsStr, partStr, y);
+    }
+
     ctx->actual++;
 }
 
-void mostrarRanking()
+void mostrarRanking(tSDLCtx* ctx)
 {
     FILE *archJugadores, *archPartida;
     tJugador *jugadores;
@@ -32,77 +45,41 @@ void mostrarRanking()
     tArbol arbolRanking;
     tContextoRanking contexto;
 
-    system("cls");
-    puts("===================================================");
-    puts("\t\tRANKING DE JUGADORES");
-    puts("===================================================\n");
-
-    //abre el archivo de jugadores. Si esta vacio no muestra nada y da la opcion de volver al menu
     archJugadores = fopen(ARCH_JUGADORES, "rb");
-    if(!archJugadores)
-    {
-        puts("No hay jugadores registrados aun.");
-        puts("\nPresiona cualquier tecla para volver al menu...");
-        getch();
-        return;
-    }
+    if(!archJugadores) return;
 
-    //se obtiene la cantidad de jugadores
     fseek(archJugadores, 0, SEEK_END);
     cantJugadores = (ftell(archJugadores) / sizeof(tJugador));
     rewind(archJugadores);
 
     if(cantJugadores == 0) {
         fclose(archJugadores);
-        puts("No hay jugadores registrados.");
-        puts("\nPresiona cualquier tecla para volver al menu...");
-        getch();
         return;
     }
 
     jugadores = (tJugador*)malloc(cantJugadores*sizeof(tJugador));
-    if (!jugadores)
-    {
+    if (!jugadores) {
         fclose(archJugadores);
-        puts("Error de memoria.");
-        puts("\nPresiona cualquier tecla para volver al menu...");
-        getch();
         return;
     }
 
-    puntajes = (int*)calloc(cantJugadores, sizeof(int)); //es un vector para acumular los puntajes de cada jugador
+    puntajes = (int*)calloc(cantJugadores, sizeof(int));
     if (!puntajes) {
         free(jugadores);
         fclose(archJugadores);
-        puts("Error de memoria.");
-        puts("\nPresiona cualquier tecla para volver al menu...");
-        getch();
         return;
     }
 
-    //carga los registros del archivo
     fread(jugadores, sizeof(tJugador), cantJugadores, archJugadores);
     fclose(archJugadores);
 
     archPartida = fopen(ARCH_PARTIDAS, "rb");
-    if(!archPartida){
-        free(jugadores);
-        free(puntajes);
-        puts("Error al abrir el archivo de partidas.");
-        puts("\nPresiona cualquier tecla para volver al menu...");
-        getch();
-        return;
-    }
-
-    else{
-        while(fread(&partida, sizeof(tPartida), 1, archPartida) == 1){
-            idx = partida.idJugador - 1; //el archivo de jugadores empieza desde el id 1, por eso se resta 1 aca
-
-            //si el indice esta dentro del "rango" suma los puntos
+    if(archPartida) {
+        while(fread(&partida, sizeof(tPartida), 1, archPartida) == 1) {
+            idx = partida.idJugador - 1;
             if (idx >= 0 && idx < cantJugadores)
                 *(puntajes + idx) += partida.puntosObtenidos;
         }
-
         fclose(archPartida);
     }
 
@@ -120,16 +97,14 @@ void mostrarRanking()
     free(jugadores);
     free(puntajes);
 
-    printf(" %-5s %-20s %-14s %-10s\n", "Pos.", "Nombre", "Puntos Totales", "Partidas");
-    printf(" %-5s %-20s %-14s %-10s\n", "-----", "--------------------", "--------------", "--------");
 
-    contexto.total = contarNodos(&arbolRanking);
+    contexto.total = cantJugadores;
     contexto.actual = 1;
-    recorrerInOrden(&arbolRanking, imprimirNodoRanking, &contexto);
+    contexto.sdlCtx = ctx; // Le entregamos la variable de SDL al contexto del arbol
+
+    sdl_iniciarPantallaRanking(ctx); // 1. Pinta el fondo y las cabeceras
+    recorrerInOrden(&arbolRanking, imprimirNodoRankingGrafico, &contexto); // 2. El In-Orden dibuja las filas
+    sdl_finalizarPantallaRanking(ctx); // 3. Se hace RenderPresent y espera que toquemos algo
 
     vaciarArbol(&arbolRanking);
-
-    puts("\n===================================================");
-    puts("Presiona cualquier tecla para volver al menu...");
-    getch();
 }
