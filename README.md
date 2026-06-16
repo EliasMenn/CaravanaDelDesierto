@@ -46,9 +46,11 @@ El código fue diseñado para cumplir con los estándares académicos más estri
 * SDL3
 * SDL3_ttf
 
+**Instrucciones (Instalación dependencias)**
+* Descomprimir SDL3.zip en la carpeta raíz de modo que las carpetas include y lib esten el la misma ruta que el main y el .cbp
+
 **Instrucciones (Terminal):**
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/EliasMenn/CaravanaDelDesierto.git
-Descomprimir el .zip SDL3 en la carpeta raiz
 ```
