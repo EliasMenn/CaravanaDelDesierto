@@ -5,8 +5,8 @@
 #include <SDL3/SDL_ttf.h>
 
 
-#define VENTANA_W       1600
-#define VENTANA_H       900
+#define VENTANA_W       1920
+#define VENTANA_H       1080
 #define CELL_W          46
 #define CELL_H          75
 #define CELL_GAP        4

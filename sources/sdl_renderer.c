@@ -808,11 +808,15 @@ void sdl_pantallaBienvenida(tSDLCtx* ctx, const char* nombre, int id, int partid
 }
 
 void sdl_mostrarMensajeContextual(tSDLCtx* ctx, const char* titulo, const char* detalle, int esMalo) {
-    // Guarda los textos pero no frena el juego
+    // Si ocurre un error crítico antes de armar el juego, limpiamos el fondo para que el cartel sea legible
+    SDL_SetRenderDrawColor(ctx->renderer, 26, 18, 9, 255); // Color marrón desierto de fondo
+    SDL_RenderClear(ctx->renderer);
+
+    // Guarda los textos en el contexto gráfico
     SDL_snprintf(ctx->eventoTitulo, sizeof(ctx->eventoTitulo), "%s", titulo);
     SDL_snprintf(ctx->eventoDetalle, sizeof(ctx->eventoDetalle), "%s", detalle);
     ctx->eventoEsMalo = esMalo;
-    ctx->mostrarEvento = 1; // Enciende el cartel
+    ctx->mostrarEvento = 1; // Encendemos la bandera para que el overlay sepa que debe dibujarse
 }
 
 void sdl_renderizarOverlayEvento(tSDLCtx* ctx) {

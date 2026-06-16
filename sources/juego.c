@@ -134,10 +134,28 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
 
             if(creacionArchivoCaravana(ARCH_CARAVANA, estado.tablero, &configuracion) == ERROR_ARCHIVO)
             {
-                printf("\n Para jugar se necesita contar si o si con un archivo config.txt! Por favor, para intentar jugar cree dicho archivo con los siguientes parametros (en orden) :\n 1- cantidad_posiciones \n 2- vidas_inicio \n 3- maximo_bandidos \n 4- maxmo_premios \n 5- maximo_vidas_extra \n 6- maximo_oasis \n 7- maximo_tormentas");
-                getch(); // Asumimos que la consola de fondo sigue activa para esto
+                //Mostramos el error en la ventana de SDL
+                sdl_mostrarMensajeContextual(ctx, "ERROR CRITICO: CONFIG.TXT",
+                                             "Falta el archivo de configuracion. Cree config.txt para jugar. Pulse Esc", 1);
+
+                // Forzamos un renderizado rápido para asegurarnos de que el cartel se pinte antes de salir
+                sdl_limpiar(ctx);
+                sdl_renderizarOverlayEvento(ctx);
+                sdl_presentar(ctx);
+
+                // Esperamos que el usuario asimile el error y toque una flecha/tecla para salir de la partida
+                sdl_esperarDireccion(ctx);
+
+                // Vaciamos el árbol para no dejar fugas de memoria y abortamos la función de forma limpia
+                vaciarArbol(&indiceJugadores);
                 return;
             }
+//            if(creacionArchivoCaravana(ARCH_CARAVANA, estado.tablero, &configuracion) == ERROR_ARCHIVO)
+//            {
+//                printf("\n Para jugar se necesita contar si o si con un archivo config.txt! Por favor, para intentar jugar cree dicho archivo con los siguientes parametros (en orden) :\n 1- cantidad_posiciones \n 2- vidas_inicio \n 3- maximo_bandidos \n 4- maxmo_premios \n 5- maximo_vidas_extra \n 6- maximo_oasis \n 7- maximo_tormentas");
+//                getch(); // Asumimos que la consola de fondo sigue activa para esto
+//                return;
+//            }
 
             procesarInicioNuevaPartida(&estado, &configuracion, &indiceJugadores, ctx);
 
