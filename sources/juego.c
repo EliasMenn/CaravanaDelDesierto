@@ -1,6 +1,5 @@
 #include "..\headers\juego.h"
 
-
 int cmpCaracteres(const void* entidad, const void* caracterEnNodo)
 {
     char* aux1=(char*)entidad;
@@ -16,93 +15,11 @@ int cmp(const void* d1,const void* d2)
     return strcmpi(auxIndice1->clave,auxIndice2->clave);
 }
 
-
 int tirar_dado(unsigned lados)
 {
     srand(time(NULL));
     return rand() % lados + 1;
 }
-
-
-//void iniciarCaravanaDelDesierto()
-//{
-//    tListaDobCirc tablero;
-//    tConfig configuracion;
-//    tArbol indiceJugadores = NULL;
-//    tCola colaMov;
-//    tEstadoJuego estado;
-//    crearLista(&tablero);
-//    crearArbol(&indiceJugadores);
-//    crearCola(&colaMov);
-//
-//    estado.tablero = &tablero;
-//    estado.colaMovimientos = &colaMov;
-//
-//    //se baja el indice de jugadores
-//    cargarIndiceJugadores(&indiceJugadores, ARCH_INDICE_JUGADORES,sizeof(tIndice));
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-//    char opcion = sdl_menu(ctx);
-//
-//    while(opcion != '3') // '3' es SALIR en tu sdl_menu
-//    {
-//        if(opcion == '1') // '1' es NUEVA_PARTIDA
-//        {
-//            // ... (tu codigo actual de vaciar lista y creacion de archivo) ...
-//
-//            procesarInicioNuevaPartida(&estado, &configuracion, &indiceJugadores);
-//
-//            // Pasamos ctx al bucle de juego para poder dibujar y leer teclas
-//            bucleJuego(&estado, &configuracion, ctx);
-//
-//            // ... (tu codigo de guardado) ...
-//
-//            // REEMPLAZO 2: En vez de mostrarPantallaFinPartida
-//            sdl_pantallaFin(ctx, estado.jugador.nombre, estado.puntosActuales, estado.vidasActuales, estado.turnosJugados, estado.vidasActuales > 0);
-//        }
-//
-//        if(opcion == '2') // '2' es TABLA_DE_PUNTAJES
-//            mostrarRanking(); // (Podemos dejar esto en consola por ahora si no hiciste ranking en SDL)
-//
-//        opcion = sdl_menu(ctx);
-//    }
-////    char opcion = menuPrincipal(MENSAJE_MENU_PRINCIPAL, OPCIONES_MENU_PRINCIPAL);
-////    while(opcion != SALIR)
-////    {
-////
-////        if(opcion == NUEVA_PARTIDA)
-////        {
-////            se limpia el tablero de la partida anterior y la cola de movimientos
-////            VaciarListaDobCirc(&tablero);
-////            vaciarCola(&colaMov);
-////            if(creacionArchivoCaravana(ARCH_CARAVANA, estado.tablero, &configuracion)==ERROR_ARCHIVO)
-////            {
-////                printf("\n Para jugar se necesita contar si o si con un archivo config.txt! Por favor, para intentar jugar cree dicho archivo con los siguientes parametros (en orden) :\n 1- cantidad_posiciones \n 2- vidas_inicio \n 3- maximo_bandidos \n 4- maxmo_premios \n 5- maximo_vidas_extra \n 6- maximo_oasis \n 7- maximo_tormentas");
-////                getch();
-////                return;
-////            }
-////            procesarInicioNuevaPartida(&estado, &configuracion, &indiceJugadores);
-////            bucleJuego(&estado, &configuracion);
-////
-////            actualizarJugador(&estado, ARCH_JUGADORES);
-////            guardarPartida(&estado, ARCH_PARTIDAS);
-////            guardarIndiceJugadores(&indiceJugadores, ARCH_INDICE_JUGADORES);
-////
-////            mostrarPantallaFinPartida(&estado);
-////        }
-////
-////        if(opcion == TABLA_DE_PUNTAJES)
-////            mostrarRanking();
-////
-////        system("cls");
-////        opcion = menuPrincipal(MENSAJE_MENU_PRINCIPAL, OPCIONES_MENU_PRINCIPAL);
-////    }
-//
-//    vaciarArbol(&indiceJugadores);
-//    //si sale del while es porque el jugador eligio salir del juego
-//    system("cls");
-//    puts("Muchas gracias por jugar! Vuelva pronto!");
-//}
 
 void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
 {
@@ -121,9 +38,10 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
     // Se baja el indice de jugadores
     cargarIndiceJugadores(&indiceJugadores, ARCH_INDICE_JUGADORES, sizeof(tIndice));
 
-    //Usamos la interfaz de SDL para el menú, pero guardando la opción ingresada
-
+    //Inicia musica de ambiente con una funcion de windows
     PlaySound(TEXT("musica.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+
+    //Usamos la interfaz de SDL para el menú, pero guardando la opción ingresada
     char opcion = sdl_menu(ctx);
 
     while(opcion != SALIR)
@@ -182,7 +100,6 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
     system("cls");
     puts("Muchas gracias por jugar! Vuelva pronto!");
 }
-
 
 void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,tPosiciones* pos)
 {
@@ -245,7 +162,6 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,tPosiciones
 
 
 }
-
 
 tNodoDob* calcularNodoDestino(tEstadoJuego* estado, tMovimiento* mov, tNodoDob* nodoActual)
 {
@@ -431,113 +347,6 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio, tPosiciones* 
     return SIGUE_PARTIDA;
 }
 
-
-
-//void bucleJuego(tEstadoJuego* estado, tConfig* config)
-//{
-//    int finPartida = 0,jugadorSeMovio, dadoJ,huboError=0,indiceCasillero;
-//    char dirJ;
-//    tMovimiento movJugador, movActual;
-//    tPosiciones pos;
-//    tNodoDob* buscador;
-//    if (definirPosiciones(&pos, ARCH_CONFIG) != EXITO)
-//    {
-//        printf("Error al cargar memoria para los bandidos.\n");
-//        return;
-//    }
-//     escaner inicial para los bandidos
-//    actualizarPosiciones(estado->tablero, &pos);
-//
-//    while (!finPartida)
-//    {
-//        jugadorSeMovio = 0;
-//
-//         ENCOLAMOS LOS MOVIMIENTOS
-//        if (estado->perdioTurno)
-//        {
-//            printf("\nPierdes este turno debido a la tormenta de arena.\n");
-//            estado->perdioTurno = 0;
-//            jugadorSeMovio = 0;
-//        }
-//
-//        else
-//        {
-//
-//            dadoJ = tirar_dado(CARAS_DADO);
-//            do
-//            {
-//                if (huboError == 1)
-//                {
-//                    system("cls");
-//                    mostrarTablero(estado,&pos); // Vuelve a imprimir el mapa y el HUD actualizados
-//                    printf("\n [!] Error: Direccion invalida. Por favor, ingresa 'F' o 'B'.\n");
-//                }
-//                printf("\nSacaste un %d. Hacia donde te moves? (F: Adelante, B: Atras): ", dadoJ);
-//                fflush(stdin);
-//                scanf(" %c", &dirJ);
-//                dirJ= toUpper(dirJ); // si es minuscula la pasa a mayuscula y si es mayuscula la mantiene
-//
-//                if (dirJ != 'F' && dirJ != 'B')
-//                    huboError=1;
-//                else
-//                    huboError=0;
-//
-//            }while(dirJ!='F' && dirJ != 'B');
-//
-//            movJugador.tipoEntidad = 'J';
-//            movJugador.id_entidad = 0;
-//
-//
-//            movJugador.direccion = dirJ;
-//            movJugador.pasos = dadoJ;
-//
-//            aColar(estado->colaMovimientos, &movJugador, sizeof(tMovimiento));
-//            jugadorSeMovio = 1;
-//        }
-//
-//        buscador = *(estado->tablero);
-//        indiceCasillero = 0;
-//        do
-//        {
-//            if (*(char*)(buscador->info) == 'J')
-//                pos.posJugador = indiceCasillero;
-//            buscador = buscador->sig;
-//            indiceCasillero++;
-//        }while (buscador != *(estado->tablero));
-//
-//        calcularMovimientos(&pos, estado->colaMovimientos);
-//
-//         DESENCOLAMOS Y MOVEMOS
-//        while (colaVacia(estado->colaMovimientos) == COLA_NO_VACIA)
-//        {
-//
-//            outCola(estado->colaMovimientos, &movActual, sizeof(tMovimiento));
-//            aplicarMovimientoTablero(estado, &movActual,&pos);
-//
-//            if (movActual.tipoEntidad == 'J')
-//            {
-//                registrarMovimientoHistorial(estado, movActual.direccion, movActual.pasos);
-//                estado->turnosJugados++;
-//            }
-//        }
-//        sincronizarBandidosApilados(estado,&pos);
-//         VERIFICAMOS RESULTADO FINAL
-//        finPartida = verificarEstadoTurno(estado, jugadorSeMovio,&pos);
-//
-//         ACTUALIZAMOS PANTALLA
-//        if (finPartida==SIGUE_PARTIDA)
-//        {
-//            printf("\nPresiona cualquier tecla para continuar...\n");
-//            getch();
-//            system("cls");
-//            mostrarTablero(estado,&pos);
-//        }
-//    }
-//
-//    mostrarHistorialMovimientos();
-//    free(pos.posBandidos);
-//}
-
 void sincronizarBandidosApilados(tEstadoJuego* estado, tPosiciones* pos)
 {
     int *pBandido,*pFinBandidos,posActual = 0;
@@ -677,83 +486,6 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx)
 
     free(pos.posBandidos);
 }
-//
-//void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores, tSDLCtx* ctx)
-//{
-//    int posicion,i=0,estadoBusqueda;
-//    tJugador jugadorTmp;
-//    tIndice nuevoIndice;
-//    FILE* fReg;
-//    char* pTerreno;
-//    tNodoDob* nodoInicio;
-//
-//    memset(&jugadorTmp, 0, sizeof(tJugador)); // setea al jugador todo en 0
-//
-//    printf("\n Ingrese su nombre (alias): ");
-//    fflush(stdin);
-//    scanf("%s", jugadorTmp.nombre);
-//    estadoBusqueda = BuscarNombreJugador(jugadorTmp.nombre, jugadores, cmp, &posicion);
-//
-//    if(estadoBusqueda == NO_EXISTE)
-//    {
-//        jugadorTmp.id = contarNodosEnIndice(jugadores) + 1;
-//        jugadorTmp.partidasJugadas = 0;
-//        guardarJugador(&jugadorTmp, ARCH_JUGADORES,jugadores,cmp);
-//
-//        strcpy(nuevoIndice.clave, jugadorTmp.nombre);
-//        nuevoIndice.pos = jugadorTmp.id - 1;
-//
-//        insertarEnIndice(jugadores, (char*)&nuevoIndice, sizeof(tIndice), cmp);
-//    }
-//    else
-//    {
-//        if(!buscarJugadorEnArchivo(ARCH_JUGADORES, posicion, &jugadorTmp))
-//        {
-//            printf("Error al buscar jugador en archivo.\n");
-//            return;
-//        }
-//    }
-//
-//    // CARGAMOS EL ESTADO DE INICIO
-//    estado->jugador = jugadorTmp; //se guardan los datos del jugador
-//    estado->vidasActuales = config->vidasInicio; //se asignan las vidas desde el archivo config.txt
-//    estado->puntosActuales = 0;
-//    estado->turnosJugados = 0;
-//    estado->jugadorProtegido = 0;
-//    estado->perdioTurno = 0;
-//    estado->terrenoBajoJugador = 'I'; //el jugador inicia sobre el campamento inicial (I)
-//    estado->colisionBandido = 0;
-//
-//    pTerreno = estado->terrenoBajoBandido;
-//
-//    while (i <  MAX_BANDIDOS)
-//    {
-//        *pTerreno = '.'; //guardamos el punto en la dirección actual
-//        pTerreno++;      //avanzamos a la siguiente dirección de memoria
-//        i++;
-//    }
-//
-//    //nos posicionamos en el primer nodo (el Campamento Inicial)
-//    nodoInicio = *(estado->tablero);
-//    if (nodoInicio)
-//    {
-//        *(char*)(nodoInicio->info) = 'J';
-//    }
-//
-//    system("cls");
-//    printf("\n -------------------------------CARAVANA DEL DESIERTO-------------------------------\n");
-//    printf("\nBienvenido %s, tu id es %d y has jugado %d partidas.\n", estado->jugador.nombre, estado->jugador.id, estado->jugador.partidasJugadas);
-//    printf("\nOprime cualquier tecla para comenzar a jugar...\n");
-//    getch();
-//    system("cls");
-//
-//    mostrarTablero(estado, NULL, ctx);
-//
-//    //limpiamos el registro de movimientos de partidas anteriores
-//    fReg = fopen(ARCH_MOVIMIENTOS, "wt");
-//    if(fReg)
-//        fclose(fReg);
-//}
 
 void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores, tSDLCtx* ctx)
 {
