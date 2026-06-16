@@ -140,7 +140,7 @@ static void dibujarCarruaje(SDL_Renderer* r, int cx, int cy) {
     fillCircle(r, bx-14, by+18, 4, camello);
 }
 
-/* Stickman bandido con sombrero cowboy y pistola */
+/* Stickman bandido */
 static void dibujarBandido(SDL_Renderer* r, int cx, int cy) {
     SDL_Color piel    = {212, 160, 112, 255};
     SDL_Color sombr   = { 61,  34,   0, 255};
@@ -188,7 +188,7 @@ static void dibujarBandido(SDL_Renderer* r, int cx, int cy) {
     drawLine(r, hx, hy+34, hx+9,  hy+48, cuerpo);
 }
 
-/* Oasis con palmera refinada */
+/* Oasis con palmera */
 static void dibujarOasis(SDL_Renderer* r, int cx, int cy) {
     SDL_Color agua    = { 41, 128, 185, 180};
     SDL_Color tronco  = {125,  96,   8, 255};
@@ -328,7 +328,7 @@ static void dibujarLetra(SDL_Renderer* r, int cx, int cy, char letra, SDL_Color 
 }
 
 /* =========================================================
-   CASILLERO COMPLETO
+   CASILLERO
    ========================================================= */
 static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
                               int x, int y, char tipo, int numero,
@@ -385,9 +385,6 @@ static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
     drawText(r, fCell, letraStr, x + CELL_W/2, y + CELL_H - 10, letraCol, 1);
 }
 
-/* =========================================================
-   API PUBLICA
-   ========================================================= */
 
 int sdl_iniciar(tSDLCtx* ctx) {
     ctx->inicializado = 0;

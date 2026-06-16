@@ -11,6 +11,8 @@
 #include "../headers/ranking.h"
 #include "../headers/utiles.h"
 #include "../headers/sdl_renderer.h"
+#include <windows.h>
+#include <mmsystem.h>
 
 typedef struct {
     char tipoEntidad;
@@ -46,11 +48,13 @@ int tirar_dado(unsigned lados);
 void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,struct sPosiciones* pos);
 int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio, struct sPosiciones* pos, tSDLCtx* ctx);
 //int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio,struct sPosiciones* pos);
-void mostrarHistorialMovimientos();
+
 //void bucleJuego(tEstadoJuego* estado, tConfig* config);
 void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx);
 //void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores);
 void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores, tSDLCtx* ctx);
+
+//void mostrarHistorialMovimientos(); se borró porque se creó sdl_mostrarHistorial
 
 void iniciarCaravanaDelDesierto(tSDLCtx* ctx);
 

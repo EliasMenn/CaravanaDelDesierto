@@ -1,22 +1,5 @@
 #include "..\headers\interfaz.h"
 
-//muestra el menu y devuelve la opcion elegida
-char menuPrincipal(const char *mensaje, const char *opciones){
-    char opc;
-
-    puts(mensaje);
-    printf("\nSeleccione una opcion: ");
-    fflush(stdin);
-    scanf("%c", &opc);
-    while(strchr(opciones, opc) == NULL){
-        printf("Error! Opcion no valida. Intente nuevamente: ");
-        fflush(stdin);
-        scanf("%c", &opc);
-    }
-
-    system("cls");
-    return opc;
-}
 
 char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasExtras, int *cantOasis, int *cantTormentas, int *vacios, int restantes)
 {
@@ -182,29 +165,3 @@ void mostrarTablero(tEstadoJuego* estado, tPosiciones* pos, tSDLCtx* ctx)
                       estado->jugadorProtegido, estado->perdioTurno);
 }
 
-void mostrarPantallaFinPartida(tEstadoJuego* estado)
-{
-    system("cls");
-    printf("=====================================\n");
-    printf("          PARTIDA FINALIZADA\n");
-    printf("=====================================\n\n");
-    printf("  Jugador : %s\n", estado->jugador.nombre);
-    printf("  Puntos  : %d\n", estado->puntosActuales);
-    printf("  Vidas   : %d\n", estado->vidasActuales);
-    printf("  Turnos  : %d\n", estado->turnosJugados);
-
-    if (estado->vidasActuales <= 0) {
-        printf("\nResultado: Sin vidas! La caravana no llego a destino.\n");
-    } else {
-        printf("\nResultado: Llegaste a la Ciudad Refugio!\n");
-    }
-
-    printf("\n=====================================\n");
-    printf("Presiona cualquier tecla para continuar...\n");
-    getch();
-
-    mostrarHistorialMovimientos();
-
-    printf("\nPresiona cualquier tecla para volver al menu...\n");
-    getch();
-}

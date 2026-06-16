@@ -1,5 +1,6 @@
 #include "..\headers\juego.h"
 
+
 int cmpCaracteres(const void* entidad, const void* caracterEnNodo)
 {
     char* aux1=(char*)entidad;
@@ -122,6 +123,7 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
 
     //Usamos la interfaz de SDL para el menú, pero guardando la opción ingresada
 
+    PlaySound(TEXT("musica.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
     char opcion = sdl_menu(ctx);
 
     while(opcion != SALIR)
@@ -137,8 +139,6 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
                 //Mostramos el error en la ventana de SDL
                 sdl_mostrarMensajeContextual(ctx, "ERROR CRITICO: CONFIG.TXT",
                                              "Falta el archivo de configuracion. Cree config.txt para jugar. Pulse Esc", 1);
-
-                // Forzamos un renderizado rápido para asegurarnos de que el cartel se pinte antes de salir
                 sdl_limpiar(ctx);
                 sdl_renderizarOverlayEvento(ctx);
                 sdl_presentar(ctx);
@@ -150,12 +150,6 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
                 vaciarArbol(&indiceJugadores);
                 return;
             }
-//            if(creacionArchivoCaravana(ARCH_CARAVANA, estado.tablero, &configuracion) == ERROR_ARCHIVO)
-//            {
-//                printf("\n Para jugar se necesita contar si o si con un archivo config.txt! Por favor, para intentar jugar cree dicho archivo con los siguientes parametros (en orden) :\n 1- cantidad_posiciones \n 2- vidas_inicio \n 3- maximo_bandidos \n 4- maxmo_premios \n 5- maximo_vidas_extra \n 6- maximo_oasis \n 7- maximo_tormentas");
-//                getch(); // Asumimos que la consola de fondo sigue activa para esto
-//                return;
-//            }
 
             procesarInicioNuevaPartida(&estado, &configuracion, &indiceJugadores, ctx);
 
@@ -437,24 +431,7 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio, tPosiciones* 
     return SIGUE_PARTIDA;
 }
 
-void mostrarHistorialMovimientos()
-{
-    printf("\n--- REGISTRO DE MOVIMIENTOS ---\n");
-    FILE* arch = fopen(ARCH_MOVIMIENTOS, "rt");
-    if (!arch)
-    {
-        printf("No hay movimientos registrados.\n");
-        return;
-    }
 
-    char linea[TAM_LINEA_MOV];
-    while (fgets(linea, TAM_LINEA_MOV-1, arch))
-    {
-        printf("%s", linea);
-    }
-    fclose(arch);
-    printf("-------------------------------\n");
-}
 
 //void bucleJuego(tEstadoJuego* estado, tConfig* config)
 //{
