@@ -28,6 +28,8 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
     tArbol indiceJugadores = NULL;
     tCola colaMov;
     tEstadoJuego estado;
+    char opcion;
+    int gano;
     crearLista(&tablero);
     crearArbol(&indiceJugadores);
     crearCola(&colaMov);
@@ -42,7 +44,7 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
     PlaySound(TEXT("musica.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
     //Usamos la interfaz de SDL para el menú, pero guardando la opción ingresada
-    char opcion = sdl_menu(ctx);
+    opcion = sdl_menu(ctx);
 
     while(opcion != SALIR)
     {
@@ -80,7 +82,7 @@ void iniciarCaravanaDelDesierto(tSDLCtx* ctx)
 
             // Fin de partida gráfico con SDL
             // Evaluamos si ganó chequeando si le quedaron vidas
-            int gano = (estado.vidasActuales > 0) ? 1 : 0;
+            gano = (estado.vidasActuales > 0) ? 1 : 0;
             sdl_pantallaFin(ctx, estado.jugador.nombre, estado.puntosActuales, estado.vidasActuales, estado.turnosJugados, gano);
 
             //Mostramos el historial antes de volver al menú
