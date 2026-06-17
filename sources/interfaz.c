@@ -49,14 +49,13 @@ char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasEx
 void mostrarTablero(tEstadoJuego* estado, tPosiciones* pos, tSDLCtx* ctx)
 {
     tNodoDob* actual = *(estado->tablero);
-    int indiceCasillero = 0;
-    int esJugador, esBandido;
+    int indiceCasillero = 0, totalCasilleros = 0;
+    int esJugador, esBandido, i;
+    char caracterNodo, terrenoBase;
 
     if (!actual)
         return;
 
-    // --- NUEVO: Contamos cuántos casilleros hay en total para poder centrar ---
-    int totalCasilleros = 0;
     tNodoDob* aux = actual;
     do {
         totalCasilleros++;
@@ -65,21 +64,23 @@ void mostrarTablero(tEstadoJuego* estado, tPosiciones* pos, tSDLCtx* ctx)
     // --------------------------------------------------------------------------
 
     do {
-        char caracterNodo = *(char*)(actual->info);
+        caracterNodo = *(char*)(actual->info);
         esJugador = (caracterNodo == 'J') ? 1 : 0;
         esBandido = 0;
-        char terrenoBase = caracterNodo;
+        terrenoBase = caracterNodo;
 
         if (pos) {
-            for (int i = 0; i < pos->cantBandidos; i++) {
-                if (pos->posBandidos[i] == indiceCasillero) {
-                    esBandido = 1;
-                    terrenoBase = estado->terrenoBajoBandido[i];
+            i = 0;
+            // El ciclo sigue mientras haya bandidos por revisar Y todavía no hayamos encontrado a ninguno acá
+            while (i < pos->cantBandidos && esBandido == 0) {
+                if (*(pos->posBandidos+i) == indiceCasillero) {
+                    esBandido = 1; // Al ponerse en 1, el while se va a cortar limpiamente en la próxima vuelta
+                    terrenoBase = *(estado->terrenoBajoBandido+i);
                     if (terrenoBase == 'B' || terrenoBase == 'J') {
                         terrenoBase = '.';
                     }
-                    break;
                 }
+                i++;
             }
         }
 

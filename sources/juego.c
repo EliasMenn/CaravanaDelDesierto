@@ -491,6 +491,7 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx)
     free(pos.posBandidos);
 }
 
+//funca
 void procesarInicioNuevaPartida(tEstadoJuego* estado, tConfig* config, tArbol* jugadores, tSDLCtx* ctx)
 {
     int posicion,i=0,estadoBusqueda;
