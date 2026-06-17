@@ -4,6 +4,10 @@ build/
 Debug/
 Release/
 
+# Ignorar librerias de SDL
+include/
+lib/
+
 # Object files
 *.o
 *.obj
