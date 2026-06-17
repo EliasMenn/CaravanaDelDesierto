@@ -65,26 +65,34 @@ static void drawLine(SDL_Renderer* r, int x1, int y1, int x2, int y2, SDL_Color 
 }
 
 static void fillCircle(SDL_Renderer* r, int cx, int cy, int radio, SDL_Color c) {
+    int dy, dx;
+
     setColor(r, c);
-    for (int dy = -radio; dy <= radio; dy++) {
-        int dx = (int)SDL_sqrt((double)(radio*radio - dy*dy));
+    for (dy = -radio; dy <= radio; dy++) {
+        dx = (int)SDL_sqrt((double)(radio*radio - dy*dy));
         SDL_RenderLine(r, (float)(cx-dx), (float)(cy+dy), (float)(cx+dx), (float)(cy+dy));
     }
 }
 
-static void drawText(SDL_Renderer* r, TTF_Font* f, const char* txt,
-                     int x, int y, SDL_Color c, int centrado) {
-    if (!f || !txt || txt[0] == '\0') return;
-    SDL_Surface* surf = TTF_RenderText_Blended(f, txt, 0, c);
-    if (!surf) return;
-    SDL_Texture* tex = SDL_CreateTextureFromSurface(r, surf);
+static void drawText(SDL_Renderer* r, TTF_Font* f, const char* txt, int x, int y, SDL_Color c, int centrado) {
+    SDL_Surface* surf;
+    SDL_Texture* tex;
+
+    if (!f || !txt || txt[0] == '\0')
+        return;
+
+    surf = TTF_RenderText_Blended(f, txt, 0, c);
+    if (!surf)
+        return;
+
+    tex = SDL_CreateTextureFromSurface(r, surf);
     if (tex) {
         float w = (float)surf->w, h = (float)surf->h;
-        SDL_FRect dst = { centrado ? (float)(x - surf->w/2) : (float)x,
-                          (float)(y - surf->h/2), w, h };
+        SDL_FRect dst = { centrado ? (float)(x - surf->w/2) : (float)x, (float)(y - surf->h/2), w, h };
         SDL_RenderTexture(r, tex, NULL, &dst);
         SDL_DestroyTexture(tex);
     }
+
     SDL_DestroySurface(surf);
 }
 
@@ -101,10 +109,10 @@ static void dibujarCarruaje(SDL_Renderer* r, int cx, int cy) {
     SDL_Color rueda       = { 90,  58,  16, 255};
     SDL_Color camello     = {200, 160,  96, 255};
 
-    int bx = cx - 18, by = cy - 28;
+    int bx = cx - 18, by = cy - 28, i;
 
     /* techo arqueado */
-    for (int i = 0; i < 5; i++)
+    for (i = 0; i < 5; i++)
         drawLine(r, bx+i*2, by - 10 + i, bx+36-i*2, by - 10 + i, amarillo);
 
     /* cuerpo */
@@ -142,14 +150,22 @@ static void dibujarCarruaje(SDL_Renderer* r, int cx, int cy) {
 
 /* Stickman bandido */
 static void dibujarBandido(SDL_Renderer* r, int cx, int cy) {
-    SDL_Color piel    = {212, 160, 112, 255};
-    SDL_Color sombr   = { 61,  34,   0, 255};
-    SDL_Color banda   = {139,   0,   0, 255};
-    SDL_Color panyo   = {204,  34,   0, 255};
-    SDL_Color cuerpo  = { 90,  51,   0, 255};
+    SDL_Color piel = {212, 160, 112, 255};
+    SDL_Color sombr = { 61,  34,   0, 255};
+    SDL_Color banda = {139,   0,   0, 255};
+    SDL_Color panyo = {204,  34,   0, 255};
+    SDL_Color cuerpo = { 90,  51,   0, 255};
     SDL_Color pistola = { 51,  51,  51, 255};
 
-    int hx = cx, hy = cy - 32;
+    int hx = cx, hy = cy - 32, i;
+
+    /* paï¿½uelo */
+    SDL_FPoint pts[4] = {
+        {(float)(hx-8), (float)(hy+13)},
+        {(float)(hx+8), (float)(hy+13)},
+        {(float)(hx+6), (float)(hy+22)},
+        {(float)(hx-6), (float)(hy+22)}
+    };
 
     /* sombrero ala */
     fillRect(r, hx-14, hy-2, 28, 4, sombr);
@@ -161,15 +177,8 @@ static void dibujarBandido(SDL_Renderer* r, int cx, int cy) {
     /* cabeza */
     fillCircle(r, hx, hy+6, 8, piel);
 
-    /* pañuelo */
-    SDL_FPoint pts[4] = {
-        {(float)(hx-8), (float)(hy+13)},
-        {(float)(hx+8), (float)(hy+13)},
-        {(float)(hx+6), (float)(hy+22)},
-        {(float)(hx-6), (float)(hy+22)}
-    };
     setColor(r, panyo);
-    for (int i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
         SDL_RenderLine(r, pts[i].x, pts[i].y, pts[(i+1)%4].x, pts[(i+1)%4].y);
 
     /* cuerpo */
@@ -195,10 +204,11 @@ static void dibujarOasis(SDL_Renderer* r, int cx, int cy) {
     SDL_Color hoja    = { 30, 150,  70, 255};
     SDL_Color hojaOsc = { 20, 110,  50, 255};
 
-    int bx = cx, by = cy + 10;
+    int bx = cx, by = cy + 10, i;
+    int tx = bx+1, ty = by-42; /* punta del tronco */
 
     /* laguna */
-    for (int i = 0; i < 6; i++)
+    for (i = 0; i < 6; i++)
         fillRect(r, bx-14+i, by+2-i/3, 28-i*2, 4, agua);
 
     /* tronco curvo (segmentos) */
@@ -212,37 +222,35 @@ static void dibujarOasis(SDL_Renderer* r, int cx, int cy) {
     drawLine(r, bx-2, by-20, bx-1, by-32, tronco);
     drawLine(r, bx-1, by-32, bx+2, by-42, tronco);
 
-    int tx = bx+1, ty = by-42; /* punta del tronco */
-
     /* hojas: 5 ramas */
     /* izquierda larga */
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx-18+i, ty-10+i, hojaOsc);
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx-18+i, ty-8+i,  hoja);
 
     /* izquierda media */
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx-12+i, ty-18+i, hojaOsc);
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx-10+i, ty-17+i, hoja);
 
     /* arriba */
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty, tx+i, ty-16, hojaOsc);
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty, tx+2+i, ty-16, hoja);
 
     /* derecha media */
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx+14+i, ty-16+i, hojaOsc);
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx+14+i, ty-14+i, hoja);
 
     /* derecha larga */
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx+20+i, ty-8+i, hojaOsc);
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
         drawLine(r, tx+i, ty+i, tx+20+i, ty-6+i, hoja);
 }
 
@@ -255,12 +263,12 @@ static void dibujarTornado(SDL_Renderer* r, int cx, int cy) {
         {165, 105, 189, 160},
         {187, 143, 206, 140}
     };
-    int radios[5] = {20, 15, 10, 6, 3};
-    int ys[5]     = {cy-30, cy-18, cy-6, cy+6, cy+16};
+    int radios[5] = {20, 15, 10, 6, 3}, i, dy, dx;
+    int ys[5] = {cy-30, cy-18, cy-6, cy+6, cy+16};
 
-    for (int i = 0; i < 5; i++) {
-        for (int dy = -3; dy <= 3; dy++) {
-            int dx = (int)SDL_sqrt((double)(radios[i]*radios[i] - (dy < radios[i] ? dy*dy : radios[i]*radios[i]-1)));
+    for (i = 0; i < 5; i++) {
+        for (dy = -3; dy <= 3; dy++) {
+            dx = (int)SDL_sqrt((double)(radios[i]*radios[i] - (dy < radios[i] ? dy*dy : radios[i]*radios[i]-1)));
             fillRect(r, cx-dx, ys[i]+dy, dx*2, 1, cols[i]);
         }
     }
@@ -274,6 +282,9 @@ static void dibujarTornado(SDL_Renderer* r, int cx, int cy) {
 
 /* Premio (estrella) */
 static void dibujarPremio(SDL_Renderer* r, int cx, int cy) {
+    int i, j;
+    float ang, rad;
+
     SDL_Color oro     = {241, 196,  15, 255};
     SDL_Color oroOsc  = {183, 149,  11, 255};
 
@@ -281,16 +292,17 @@ static void dibujarPremio(SDL_Renderer* r, int cx, int cy) {
     float angBase = -SDL_PI_F / 2.0f;
     float ext = 20.0f, inn = 9.0f;
     SDL_FPoint pts[10];
-    for (int i = 0; i < 10; i++) {
-        float ang = angBase + i * SDL_PI_F / 5.0f;
-        float rad = (i % 2 == 0) ? ext : inn;
+
+    for (i = 0; i < 10; i++) {
+        ang = angBase + i * SDL_PI_F / 5.0f;
+        rad = (i % 2 == 0) ? ext : inn;
         pts[i].x = cx + rad * SDL_cosf(ang);
         pts[i].y = cy - 10 + rad * SDL_sinf(ang);
     }
 
     setColor(r, oro);
-    for (int i = 0; i < 10; i++) {
-        int j = (i+1) % 10;
+    for (i = 0; i < 10; i++) {
+        j = (i+1) % 10;
         SDL_RenderLine(r, pts[i].x, pts[i].y, pts[j].x, pts[j].y);
         SDL_RenderLine(r, pts[i].x, pts[i].y, (float)cx, (float)(cy-10));
     }
@@ -302,6 +314,8 @@ static void dibujarPremio(SDL_Renderer* r, int cx, int cy) {
 
 /* Corazon (vida extra) */
 static void dibujarCorazon(SDL_Renderer* r, int cx, int cy) {
+    int ancho;
+
     SDL_Color rojo    = {231,  76,  60, 255};
     SDL_Color rojoCla = {241, 148, 138, 100};
 
@@ -311,9 +325,9 @@ static void dibujarCorazon(SDL_Renderer* r, int cx, int cy) {
 
     /* triangulo inferior */
     for (int dy = 0; dy < 18; dy++) {
-        int ancho = 16 - dy;
+        ancho = 16 - dy;
         if (ancho < 0) ancho = 0;
-        fillRect(r, cx-ancho, cy-2+dy, ancho*2, 1, rojo);
+            fillRect(r, cx-ancho, cy-2+dy, ancho*2, 1, rojo);
     }
 
     /* brillo */
@@ -330,11 +344,19 @@ static void dibujarLetra(SDL_Renderer* r, int cx, int cy, char letra, SDL_Color 
 /* =========================================================
    CASILLERO
    ========================================================= */
-static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
-                              int x, int y, char tipo, int numero,
-                              char terrenoBajo) {
+static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell, int x, int y, char tipo, int numero, char terrenoBajo) {
+    char numStr[8];
+
     SDL_Color bg  = bgColor(tipo);
     SDL_Color brd = borderColor(tipo);
+
+    /* icono centrado */
+    int iconCX = x + CELL_W/2;
+    int iconCY = y + CELL_H/2 - 4;
+
+    /* letra identificadora abajo */
+    char letraStr[3] = {tipo, '\0', '\0'};
+    SDL_Color letraCol;
 
     /* fondo */
     fillRect(r, x, y, CELL_W, CELL_H, bg);
@@ -343,14 +365,9 @@ static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
     drawRect(r, x, y, CELL_W, CELL_H, brd);
 
     /* numero arriba */
-    char numStr[8];
     SDL_snprintf(numStr, sizeof(numStr), "%02d", numero);
     SDL_Color dimCol = (SDL_Color){100, 90, 80, 255};
     drawText(r, fCell, numStr, x + CELL_W/2, y + 10, dimCol, 1);
-
-    /* icono centrado */
-    int iconCX = x + CELL_W/2;
-    int iconCY = y + CELL_H/2 - 4;
 
     switch(tipo) {
         case 'J': dibujarCarruaje(r, iconCX, iconCY);  break;
@@ -359,18 +376,13 @@ static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
         case 'T': dibujarTornado(r,  iconCX, iconCY);  break;
         case 'P': dibujarPremio(r,   iconCX, iconCY);  break;
         case 'V': dibujarCorazon(r,  iconCX, iconCY);  break;
-        case 'I': dibujarLetra(r, iconCX, iconCY, 'I',
-                               (SDL_Color){30,132,73,255});  break;
-        case 'S': dibujarLetra(r, iconCX, iconCY, 'S',
-                               (SDL_Color){26,82,118,255});   break;
+        case 'I': dibujarLetra(r, iconCX, iconCY, 'I', (SDL_Color){30,132,73,255});  break;
+        case 'S': dibujarLetra(r, iconCX, iconCY, 'S', (SDL_Color){26,82,118,255});  break;
         default:
             fillCircle(r, iconCX, iconCY+8, 4, (SDL_Color){80,70,55,255});
             break;
     }
 
-    /* letra identificadora abajo */
-    char letraStr[3] = {tipo, '\0', '\0'};
-    SDL_Color letraCol;
     switch(tipo) {
         case 'J': letraCol = (SDL_Color){232,212,139,255}; break;
         case 'B': letraCol = (SDL_Color){231, 76, 60,255}; break;
@@ -400,8 +412,7 @@ int sdl_iniciar(tSDLCtx* ctx) {
         return 0;
     }
 
-    ctx->ventana = SDL_CreateWindow("Caravana del Desierto",
-                                    VENTANA_W, VENTANA_H, 0);
+    ctx->ventana = SDL_CreateWindow("Caravana del Desierto", VENTANA_W, VENTANA_H, 0);
     if (!ctx->ventana) {
         SDL_Log("CreateWindow error: %s", SDL_GetError());
         TTF_Quit(); SDL_Quit();
@@ -452,9 +463,7 @@ void sdl_presentar(tSDLCtx* ctx) {
     SDL_RenderPresent(ctx->renderer);
 }
 
-void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx,
-                                       int esJugador, int esBandido, int totalCasilleros) {
-
+void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx, int esJugador, int esBandido, int totalCasilleros) {
     // Calculamos el espacio total y el margen inicial
     int anchoTotalTablero = totalCasilleros * CELL_W + (totalCasilleros - 1) * CELL_GAP;
     int startX = (VENTANA_W - anchoTotalTablero) / 2;
@@ -463,16 +472,19 @@ void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx,
     int x = startX + idx * (CELL_W + CELL_GAP);
     int y = BOARD_Y;
 
-    char terrenoFondo = tipo;
+    int iconCX = x + CELL_W/2;
+    int iconCY = y + CELL_H/2 - 4;
+
+    char terrenoFondo = tipo, entidad, label[16];
+
     if (tipo == '.') {
-        if (esJugador) terrenoFondo = 'J';
-        else if (esBandido) terrenoFondo = 'B';
+        if (esJugador)
+            terrenoFondo = 'J';
+        else if (esBandido)
+            terrenoFondo = 'B';
     }
 
     dibujarCasillero(ctx->renderer, ctx->fuenteCell, x, y, terrenoFondo, idx, '.');
-
-    int iconCX = x + CELL_W/2;
-    int iconCY = y + CELL_H/2 - 4;
 
     if (esJugador) {
         dibujarCarruaje(ctx->renderer, iconCX, iconCY);
@@ -482,15 +494,13 @@ void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx,
     }
 
     if ((esJugador || esBandido) && tipo != '.') {
-        char entidad = esJugador ? 'J' : 'B';
-        char label[16];
+        entidad = esJugador ? 'J' : 'B';
         SDL_snprintf(label, sizeof(label), "[%c %c]", tipo, entidad);
         drawText(ctx->renderer, ctx->fuenteCell, label, x + CELL_W/2, y + CELL_H + 15, (SDL_Color){220, 200, 150, 255}, 1);
     }
 }
 
-void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
-                        int puntos, int turnos, int protegido, int perdioTurno) {
+void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas, int puntos, int turnos, int protegido, int perdioTurno) {
     SDL_Color hudBg     = (SDL_Color)COL_HUD_BG;
     SDL_Color hudBorder = (SDL_Color)COL_HUD_BORDER;
     SDL_Color textoCol  = (SDL_Color)COL_TEXTO;
@@ -498,19 +508,21 @@ void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
     SDL_Color amarillo  = {232, 212, 139, 255};
     SDL_Color rojo      = {231,  76,  60, 255};
 
-    /* fondo HUD */
-    fillRect(ctx->renderer, 0, HUD_Y, VENTANA_W, VENTANA_H - HUD_Y, hudBg);
-    drawLine(ctx->renderer, 0, HUD_Y, VENTANA_W, HUD_Y, hudBorder);
-
     int cardW = 280, cardH = 80, gap = 20;
     int totalW = 4*cardW + 3*gap;
     int startX = (VENTANA_W - totalW) / 2;
     int cardY  = HUD_Y + 20;
 
     const char* labels[4] = {"JUGADOR", "VIDAS", "PUNTOS", "TURNO"};
+    char valStr[64];
+    int i, cx;
 
-    for (int i = 0; i < 4; i++) {
-        int cx = startX + i*(cardW+gap);
+    /* fondo HUD */
+    fillRect(ctx->renderer, 0, HUD_Y, VENTANA_W, VENTANA_H - HUD_Y, hudBg);
+    drawLine(ctx->renderer, 0, HUD_Y, VENTANA_W, HUD_Y, hudBorder);
+
+    for (i = 0; i < 4; i++) {
+        cx = startX + i*(cardW+gap);
         fillRect(ctx->renderer, cx, cardY, cardW, cardH,
                  (SDL_Color){13,17,23,255});
         drawRect(ctx->renderer, cx, cardY, cardW, cardH,
@@ -521,7 +533,6 @@ void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
                  cx + cardW/2, cardY + 18, verdeCla, 1);
 
         /* valor */
-        char valStr[64];
         SDL_Color valCol = textoCol;
         switch(i) {
             case 0:
@@ -544,22 +555,17 @@ void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
                 valCol = textoCol;
                 break;
         }
-        drawText(ctx->renderer, ctx->fuenteHud, valStr,
-                 cx + cardW/2, cardY + 55, valCol, 1);
+        drawText(ctx->renderer, ctx->fuenteHud, valStr, cx + cardW/2, cardY + 55, valCol, 1);
     }
 
     /* estado */
     if (protegido) {
         SDL_Color azul = {41, 128, 185, 255};
-        drawText(ctx->renderer, ctx->fuenteCell,
-                 "[ Protegido por el Oasis ]",
-                 VENTANA_W/2, HUD_Y + 115, azul, 1);
+        drawText(ctx->renderer, ctx->fuenteCell, "[ Protegido por el Oasis ]", VENTANA_W/2, HUD_Y + 115, azul, 1);
     }
     if (perdioTurno) {
         SDL_Color morado = {155, 89, 182, 255};
-        drawText(ctx->renderer, ctx->fuenteCell,
-                 "[ Atrapado en Tormenta - Turno perdido ]",
-                 VENTANA_W/2, HUD_Y + 115, morado, 1);
+        drawText(ctx->renderer, ctx->fuenteCell, "[ Atrapado en Tormenta - Turno perdido ]", VENTANA_W/2, HUD_Y + 115, morado, 1);
     }
 }
 
@@ -568,7 +574,7 @@ void sdl_dibujarMensajeDado(tSDLCtx* ctx, int dado) {
     SDL_Color dimCol   = {160, 150, 130, 255};
 
     char msg[64];
-    SDL_snprintf(msg, sizeof(msg), "Sacaste un %d  —  <- Atras    Adelante ->", dado);
+    SDL_snprintf(msg, sizeof(msg), "Sacaste un %d  ï¿½  <- Atras    Adelante ->", dado);
 
     // Dibujamos el cartelito sobre el HUD
     fillRect(ctx->renderer, 0, HUD_Y - 36, VENTANA_W, 30, (SDL_Color){26,18,9,255});
@@ -612,12 +618,8 @@ char sdl_menu(tSDLCtx* ctx) {
         setColor(ctx->renderer, fondo);
         SDL_RenderClear(ctx->renderer);
 
-        drawText(ctx->renderer, ctx->fuenteHud,
-                 "CARAVANA DEL DESIERTO",
-                 VENTANA_W/2, 200, titulo, 1);
-        drawLine(ctx->renderer,
-                 VENTANA_W/2 - 160, 225, VENTANA_W/2 + 160, 225,
-                 (SDL_Color){100,90,70,255});
+        drawText(ctx->renderer, ctx->fuenteHud, "CARAVANA DEL DESIERTO", VENTANA_W/2, 200, titulo, 1);
+        drawLine(ctx->renderer, VENTANA_W/2 - 160, 225, VENTANA_W/2 + 160, 225, (SDL_Color){100,90,70,255});
 
         for (int i = 0; i < 3; i++) {
             SDL_Color c = (i == sel) ? hover : normal;
@@ -630,8 +632,7 @@ char sdl_menu(tSDLCtx* ctx) {
                 SDL_snprintf(textoOpcion, sizeof(textoOpcion), "    %s    ", opciones[i]);
             }
 
-            drawText(ctx->renderer, ctx->fuenteHud,
-                     textoOpcion, VENTANA_W/2, 280 + i*60, c, 1);
+            drawText(ctx->renderer, ctx->fuenteHud, textoOpcion, VENTANA_W/2, 280 + i*60, c, 1);
         }
         drawText(ctx->renderer, ctx->fuenteCell,
                  "Usa las flechas arriba/abajo y Enter para confirmar",
@@ -645,9 +646,11 @@ char sdl_menu(tSDLCtx* ctx) {
             if (e.type == SDL_EVENT_KEY_DOWN) {
                 switch (e.key.key) {
                     case SDLK_UP:
-                        sel = (sel + 2) % 3; break;
+                        sel = (sel + 2) % 3;
+                        break;
                     case SDLK_DOWN:
-                        sel = (sel + 1) % 3; break;
+                        sel = (sel + 1) % 3;
+                        break;
                     case SDLK_RETURN:
                     case SDLK_KP_ENTER:
                         return teclas[sel];
@@ -655,7 +658,8 @@ char sdl_menu(tSDLCtx* ctx) {
                     case SDLK_2: return '2';
                     case SDLK_3: return '3';
                     case SDLK_ESCAPE: return '3';
-                    default: break;
+                    default:
+                        break;
                 }
             }
         }
@@ -663,8 +667,10 @@ char sdl_menu(tSDLCtx* ctx) {
     }
 }
 
-void sdl_pantallaFin(tSDLCtx* ctx, const char* nombre, int puntos,
-                      int vidas, int turnos, int gano) {
+void sdl_pantallaFin(tSDLCtx* ctx, const char* nombre, int puntos, int vidas, int turnos, int gano) {
+    char linea[64];
+    const char* tituloStr = gano ? "LLEGASTE A LA CIUDAD REFUGIO!" : "LA CARAVANA FUE DERROTADA";
+
     SDL_Color fondo   = (SDL_Color)COL_FONDO;
     SDL_Color titulo  = gano ? (SDL_Color){46,204,113,255}
                               : (SDL_Color){231,76,60,255};
@@ -674,12 +680,8 @@ void sdl_pantallaFin(tSDLCtx* ctx, const char* nombre, int puntos,
     setColor(ctx->renderer, fondo);
     SDL_RenderClear(ctx->renderer);
 
-    const char* tituloStr = gano ? "LLEGASTE A LA CIUDAD REFUGIO!"
-                                  : "LA CARAVANA FUE DERROTADA";
-    drawText(ctx->renderer, ctx->fuenteHud, tituloStr,
-             VENTANA_W/2, 200, titulo, 1);
+    drawText(ctx->renderer, ctx->fuenteHud, tituloStr, VENTANA_W/2, 200, titulo, 1);
 
-    char linea[64];
     SDL_snprintf(linea, sizeof(linea), "Jugador : %s", nombre);
     drawText(ctx->renderer, ctx->fuenteHud, linea, VENTANA_W/2, 290, normal, 1);
 
@@ -713,7 +715,7 @@ void sdl_pedirNombre(tSDLCtx* ctx, char* buffer, int maxLen) {
     int len = 0;
     buffer[0] = '\0';
 
-    // Le decimos a SDL que empiece a escuchar el teclado como texto (maneja mayúsculas, etc.)
+    // Le decimos a SDL que empiece a escuchar el teclado como texto (maneja mayï¿½sculas, etc.)
     SDL_StartTextInput(ctx->ventana);
 
     SDL_Color titulo = {232, 212, 139, 255};
@@ -732,7 +734,7 @@ void sdl_pedirNombre(tSDLCtx* ctx, char* buffer, int maxLen) {
         fillRect(ctx->renderer, VENTANA_W/2 - 200, VENTANA_H/2 - 20, 400, 60, cajaBg);
         drawRect(ctx->renderer, VENTANA_W/2 - 200, VENTANA_H/2 - 20, 400, 60, cajaBorde);
 
-        // Si ya escribió algo, lo dibujamos en el centro de la caja
+        // Si ya escribiï¿½ algo, lo dibujamos en el centro de la caja
         if (len > 0) {
             drawText(ctx->renderer, ctx->fuenteHud, buffer, VENTANA_W/2, VENTANA_H/2 + 10, texto, 1);
         }
@@ -758,7 +760,7 @@ void sdl_pedirNombre(tSDLCtx* ctx, char* buffer, int maxLen) {
             }
             // Esto atrapa las letras reales
             else if (e.type == SDL_EVENT_TEXT_INPUT) {
-                if (len + (int)strlen(e.text.text) < maxLen - 1) { // -1 para no pasarnos del límite del vector
+                if (len + (int)strlen(e.text.text) < maxLen - 1) { // -1 para no pasarnos del lï¿½mite del vector
                     strcat(buffer, e.text.text);
                     len += (int)strlen(e.text.text);
                 }
@@ -770,6 +772,7 @@ void sdl_pedirNombre(tSDLCtx* ctx, char* buffer, int maxLen) {
 }
 
 void sdl_pantallaBienvenida(tSDLCtx* ctx, const char* nombre, int id, int partidas) {
+    char linea[128];
     SDL_Color fondo = (SDL_Color)COL_FONDO;
     SDL_Color amarillo = {232, 212, 139, 255};
     SDL_Color verdeCla = {168, 230, 168, 255};
@@ -779,7 +782,6 @@ void sdl_pantallaBienvenida(tSDLCtx* ctx, const char* nombre, int id, int partid
 
     drawText(ctx->renderer, ctx->fuenteHud, "CARAVANA DEL DESIERTO", VENTANA_W/2, VENTANA_H/2 - 80, amarillo, 1);
 
-    char linea[128];
     SDL_snprintf(linea, sizeof(linea), "Bienvenido %s, tu ID es %d.", nombre, id);
     drawText(ctx->renderer, ctx->fuenteHud, linea, VENTANA_W/2, VENTANA_H/2 - 10, verdeCla, 1);
 
@@ -804,11 +806,11 @@ void sdl_pantallaBienvenida(tSDLCtx* ctx, const char* nombre, int id, int partid
 }
 
 void sdl_mostrarMensajeContextual(tSDLCtx* ctx, const char* titulo, const char* detalle, int esMalo) {
-    // Si ocurre un error crítico antes de armar el juego, limpiamos el fondo para que el cartel sea legible
-    SDL_SetRenderDrawColor(ctx->renderer, 26, 18, 9, 255); // Color marrón desierto de fondo
+    // Si ocurre un error crï¿½tico antes de armar el juego, limpiamos el fondo para que el cartel sea legible
+    SDL_SetRenderDrawColor(ctx->renderer, 26, 18, 9, 255); // Color marrï¿½n desierto de fondo
     SDL_RenderClear(ctx->renderer);
 
-    // Guarda los textos en el contexto gráfico
+    // Guarda los textos en el contexto grï¿½fico
     SDL_snprintf(ctx->eventoTitulo, sizeof(ctx->eventoTitulo), "%s", titulo);
     SDL_snprintf(ctx->eventoDetalle, sizeof(ctx->eventoDetalle), "%s", detalle);
     ctx->eventoEsMalo = esMalo;
@@ -816,16 +818,17 @@ void sdl_mostrarMensajeContextual(tSDLCtx* ctx, const char* titulo, const char* 
 }
 
 void sdl_renderizarOverlayEvento(tSDLCtx* ctx) {
+    int w = 700, h = 100;
+    int x = (VENTANA_W - w) / 2;
+    int y = 50; // Se dibuja arriba de todo para no tapar al jugador
+
     // Si no hay evento, no dibuja nada
-    if (!ctx->mostrarEvento) return;
+    if (!ctx->mostrarEvento)
+        return;
 
     SDL_Color bg = {20, 20, 20, 240};
     SDL_Color borde = ctx->eventoEsMalo ? (SDL_Color){231, 76, 60, 255} : (SDL_Color){46, 204, 113, 255};
     SDL_Color texto = {220, 210, 190, 255};
-
-    int w = 700, h = 100;
-    int x = (VENTANA_W - w) / 2;
-    int y = 50; // Se dibuja arriba de todo para no tapar al jugador
 
     fillRect(ctx->renderer, x, y, w, h, bg);
     drawRect(ctx->renderer, x, y, w, h, borde);
@@ -836,6 +839,12 @@ void sdl_renderizarOverlayEvento(tSDLCtx* ctx) {
 }
 
 void sdl_mostrarHistorial(tSDLCtx* ctx, const char* ruta_archivo) {
+    FILE *arch;
+    int startX = 200, startY = 130, colOffset = 300, maxPorColumna = 25, count = 0;
+    int listo = 0, col, row;
+    char linea[128], *nl;
+    SDL_Event e;
+
     SDL_Color fondo = (SDL_Color)COL_FONDO;
     SDL_Color titulo = {232, 212, 139, 255};
     SDL_Color texto = {200, 190, 170, 255};
@@ -846,24 +855,21 @@ void sdl_mostrarHistorial(tSDLCtx* ctx, const char* ruta_archivo) {
     drawText(ctx->renderer, ctx->fuenteHud, "REGISTRO DE MOVIMIENTOS", VENTANA_W/2, 60, titulo, 1);
     drawLine(ctx->renderer, VENTANA_W/2 - 250, 90, VENTANA_W/2 + 250, 90, (SDL_Color){100,90,70,255});
 
-    FILE* arch = fopen(ruta_archivo, "rt");
+    arch = fopen(ruta_archivo, "rt");
     if (!arch) {
         drawText(ctx->renderer, ctx->fuenteHud, "No hay movimientos registrados.", VENTANA_W/2, VENTANA_H/2, texto, 1);
     } else {
-        char linea[128];
-        int startX = 200, startY = 130, colOffset = 300, maxPorColumna = 25, count = 0;
-
         while (fgets(linea, sizeof(linea), arch)) {
-            char* nl = strchr(linea, '\n');
+            nl = strchr(linea, '\n');
             if(nl) *nl = '\0';
-            if(strlen(linea) < 2) continue;
-
-            int col = count / maxPorColumna;
-            int row = count % maxPorColumna;
-            if (col < 4) {
-                drawText(ctx->renderer, ctx->fuenteCell, linea, startX + col * colOffset, startY + row * 22, texto, 0);
+            if(strlen(linea) >= 2){
+                col = count / maxPorColumna;
+                row = count % maxPorColumna;
+                if (col < 4) {
+                    drawText(ctx->renderer, ctx->fuenteCell, linea, startX + col * colOffset, startY + row * 22, texto, 0);
+                }
+                count++;
             }
-            count++;
         }
         fclose(arch);
     }
@@ -871,8 +877,6 @@ void sdl_mostrarHistorial(tSDLCtx* ctx, const char* ruta_archivo) {
     drawText(ctx->renderer, ctx->fuenteCell, "[ Presiona ENTER para salir al Menu ]", VENTANA_W/2, VENTANA_H - 50, (SDL_Color){100,100,100,255}, 1);
     SDL_RenderPresent(ctx->renderer);
 
-    SDL_Event e;
-    int listo = 0;
     while (!listo) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_EVENT_QUIT) exit(0);
@@ -913,10 +917,12 @@ void sdl_dibujarFilaRanking(tSDLCtx* ctx, const char* pos, const char* nom, cons
 }
 
 void sdl_finalizarPantallaRanking(tSDLCtx* ctx) {
-    drawText(ctx->renderer, ctx->fuenteCell, "[ Presiona ENTER o ESC para volver al Menu Principal ]", VENTANA_W/2, VENTANA_H - 60, (SDL_Color){100,100,100,255}, 1);
-    SDL_RenderPresent(ctx->renderer); // Mostramos lo dibujado por el árbol
+    int listo;
 
-    int listo = 0;
+    drawText(ctx->renderer, ctx->fuenteCell, "[ Presiona ENTER o ESC para volver al Menu Principal ]", VENTANA_W/2, VENTANA_H - 60, (SDL_Color){100,100,100,255}, 1);
+    SDL_RenderPresent(ctx->renderer); // Mostramos lo dibujado por el ï¿½rbol
+
+    listo = 0;
     SDL_Event e;
     while (!listo) {
         while (SDL_PollEvent(&e)) {

@@ -109,11 +109,13 @@ int contarNodosConHijosSoloPorDer(tArbol *a){
 }
 
 int obtenerAltura(tArbol *a){
+    int altIzq, altDer;
+
     if(!*a)
         return 0;
 
-    int altIzq = obtenerAltura(&(*a)->izq);
-    int altDer = obtenerAltura(&(*a)->der);
+    altIzq = obtenerAltura(&(*a)->izq);
+    altDer = obtenerAltura(&(*a)->der);
 
     return MAX(altIzq, altDer) + 1;
 }
@@ -153,11 +155,12 @@ int contarNodosAPartirDeAlturaN(tArbol *a, int altura){
 }
 
 int _contarNodosAPartirDeAlturaN(tArbol *a, int alturaActual, int altura){
+    int cont;
+
     if(!*a)
         return 0;
 
-    int cont = alturaActual >= altura ? 1 : 0;
-
+    cont = alturaActual >= altura ? 1 : 0;
     return _contarNodosAPartirDeAlturaN(&(*a)->izq, alturaActual+1, altura) + _contarNodosAPartirDeAlturaN(&(*a)->der, alturaActual+1, altura) + cont;
 }
 
@@ -220,9 +223,10 @@ int cargarArchivoBinarioOrdenadoArbol(char *nomArch, tArbol *a, unsigned tamDato
 
 //recibe un archivo abierto y lo carga en un arbol, esta funcion es un envoltorio
 int cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned tamDato){
-    fseek(archivo, 0, SEEK_END);
+    int tam;
 
-    int tam = ftell(archivo);
+    fseek(archivo, 0, SEEK_END);
+    tam = ftell(archivo);
 
     //si el archivo esta vacio, no se carga nada
     if(!tam)
@@ -232,10 +236,12 @@ int cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned ta
 }
 
 int _cargarDesdeArchivoBinarioOrdenadoArbol(FILE *archivo, tArbol *a, unsigned tamDato, int li, int ls){
+    int medio, resultado;
+
     if(li > ls)
         return EXITO;
 
-    int medio = (li+ls)/2, resultado;
+    medio = (li+ls)/2;
 
     *a = malloc(sizeof(tNodoArbol));
     if(!*a)

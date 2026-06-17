@@ -67,11 +67,11 @@ int aColar(tCola* cola, const void* dato, unsigned tam)
 
 int verTope(const tCola* cola, void *dato, unsigned tam)
 {
-
+    tNodo *aux;
     if(cola->pri == NULL)
         return COLA_VACIA;
 
-    tNodo* aux = cola->pri;
+    aux = cola->pri;
     memcpy(dato,aux->dato,MIN(aux->tam,tam));
 
     return EXITO;
@@ -79,11 +79,12 @@ int verTope(const tCola* cola, void *dato, unsigned tam)
 
 int outCola(tCola* cola, void* dato, unsigned tam)
 {
+    tNodo *aux;
+
     if(cola->pri == NULL)
         return COLA_VACIA;
 
-    tNodo* aux = cola->pri;
-
+    aux = cola->pri;
     cola->pri = aux->sig;
 
     memcpy(dato,aux->dato,MIN(aux->tam,tam));

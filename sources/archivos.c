@@ -19,10 +19,13 @@ int buscarJugadorEnArchivo(const char* archJugadores,int posicion,tJugador* juga
 int cargarConfiguracion(tConfig* config, const char* archConfig)
 {
     char* linea,*aux;
-    linea=malloc(MAX_LINEA);
+    FILE* pconfig;
+
+    linea = malloc(MAX_LINEA);
     if(!linea)
         return ERROR_MEM;
-    FILE* pconfig=fopen(archConfig,"rt");
+
+    pconfig = fopen(archConfig,"rt");
     if(!pconfig)
     {
         free(linea);
@@ -35,6 +38,7 @@ int cargarConfiguracion(tConfig* config, const char* archConfig)
         free(linea);
         return ERROR_ARCHIVO;
     }
+
     fclose(pconfig);
 
     aux=strchr(linea,'\n');

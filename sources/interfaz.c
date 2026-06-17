@@ -48,16 +48,19 @@ char extraerElementoAlAzar(int *cantBandidos, int *cantPremios, int *cantVidasEx
 
 void mostrarTablero(tEstadoJuego* estado, tPosiciones* pos, tSDLCtx* ctx)
 {
-    tNodoDob* actual = *(estado->tablero);
-    int indiceCasillero = 0;
-    int esJugador, esBandido;
+    tNodoDob *actual = *(estado->tablero), *aux;
+
+    int indiceCasillero = 0, totalCasilleros;
+    int esJugador, esBandido, i, bandidoEncontrado = 0;
+    char caracterNodo, terrenoBase;
 
     if (!actual)
         return;
 
     // --- NUEVO: Contamos cuántos casilleros hay en total para poder centrar ---
-    int totalCasilleros = 0;
-    tNodoDob* aux = actual;
+    totalCasilleros = 0;
+    aux = actual;
+
     do {
         totalCasilleros++;
         aux = aux->sig;
@@ -65,20 +68,20 @@ void mostrarTablero(tEstadoJuego* estado, tPosiciones* pos, tSDLCtx* ctx)
     // --------------------------------------------------------------------------
 
     do {
-        char caracterNodo = *(char*)(actual->info);
+        caracterNodo = *(char*)(actual->info);
         esJugador = (caracterNodo == 'J') ? 1 : 0;
         esBandido = 0;
-        char terrenoBase = caracterNodo;
+        terrenoBase = caracterNodo;
 
         if (pos) {
-            for (int i = 0; i < pos->cantBandidos; i++) {
+            for (i = 0; i < pos->cantBandidos && !bandidoEncontrado; i++) {
                 if (pos->posBandidos[i] == indiceCasillero) {
                     esBandido = 1;
                     terrenoBase = estado->terrenoBajoBandido[i];
                     if (terrenoBase == 'B' || terrenoBase == 'J') {
                         terrenoBase = '.';
                     }
-                    break;
+                    bandidoEncontrado = 1;
                 }
             }
         }

@@ -15,15 +15,15 @@ void imprimirNodoRankingGrafico(void* dato, void* contexto)
 {
     tNodoRanking *nodo = (tNodoRanking *)dato;
     tContextoRanking *ctx = (tContextoRanking *)contexto;
-
+    char posStr[16], ptsStr[16], partStr[16];
+    int y;
     int posicion = ctx->total - ctx->actual + 1;
 
     // Solo pedimos dibujar a los mejores 15 para que no desborde hacia abajo la ventana
     if (posicion <= 15) {
         // La Posicion 1 caera en Y=192, la 2 en Y=224, etc
-        int y = 160 + (posicion * 32);
+        y = 160 + (posicion * 32);
 
-        char posStr[16], ptsStr[16], partStr[16];
         SDL_snprintf(posStr, sizeof(posStr), "%d", posicion);
         SDL_snprintf(ptsStr, sizeof(ptsStr), "%d", nodo->puntajeTotal);
         SDL_snprintf(partStr, sizeof(partStr), "%d", nodo->partidasJugadas);
@@ -46,7 +46,8 @@ void mostrarRanking(tSDLCtx* ctx)
     tContextoRanking contexto;
 
     archJugadores = fopen(ARCH_JUGADORES, "rb");
-    if(!archJugadores) return;
+    if(!archJugadores)
+        return;
 
     fseek(archJugadores, 0, SEEK_END);
     cantJugadores = (ftell(archJugadores) / sizeof(tJugador));

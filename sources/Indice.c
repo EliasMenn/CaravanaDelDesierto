@@ -64,10 +64,12 @@ int cargarIndiceJugadores(tArbol* indice, const char* archIndice,unsigned tamDat
 int buscarEnIndice(const tArbol* indice, char* nombre, Cmp cmp, int* posEncontrada)
 {
     tIndice* registroEncontrado;
+    int comparacion;
+
     if(!*indice)
         return NO_EXISTE;
 
-    int comparacion = cmp((*indice)->dato, nombre);
+    comparacion = cmp((*indice)->dato, nombre);
 
     if(comparacion > 0)
         return buscarEnIndice(&(*indice)->izq, nombre, cmp, posEncontrada);

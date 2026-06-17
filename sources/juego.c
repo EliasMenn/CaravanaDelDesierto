@@ -120,7 +120,6 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,tPosiciones
     {   entidadBuscada='J';
         if(!(nodoActual = buscarNodoEntidad(estado->tablero, &entidadBuscada,cmpCaracteres)))
             return;
-
     }
     else
     {
@@ -133,12 +132,8 @@ void aplicarMovimientoTablero(tEstadoJuego* estado, tMovimiento* mov,tPosiciones
         }
     }
 
-
-
     if (mov->tipoEntidad == 'B' && *(char*)(nodoActual->info) != 'B')
-    {
         return;
-    }
 
     nodoDestino = calcularNodoDestino(estado,mov,nodoActual);
 
@@ -342,7 +337,8 @@ int verificarEstadoTurno(tEstadoJuego* estado, int jugadorSeMovio, tPosiciones* 
     else
         estado->jugadorProtegido = 0;
 
-    if (estado->vidasActuales <= 0) return TERMINO_PARTIDA;
+    if (estado->vidasActuales <= 0)
+        return TERMINO_PARTIDA;
 
     return SIGUE_PARTIDA;
 }
@@ -392,7 +388,8 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx)
     tPosiciones pos;
     tNodoDob* buscador;
 
-    if (definirPosiciones(&pos, ARCH_CONFIG) != EXITO) return;
+    if (definirPosiciones(&pos, ARCH_CONFIG) != EXITO)
+        return;
 
     actualizarPosiciones(estado->tablero, &pos);
 
@@ -401,7 +398,7 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx)
     mostrarTablero(estado, &pos, ctx);
     sdl_presentar(ctx);
 
-    while (!finPartida)
+    while (finPartida == SIGUE_PARTIDA)
     {
         jugadorSeMovio = 0;
 
@@ -427,18 +424,18 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx)
 
             dirJ = sdl_esperarDireccion(ctx); // Al elegir flecha, el cartel se apaga solo
 
-            if (dirJ == 'Q') {
+            if (dirJ == 'Q')
                 finPartida = TERMINO_PARTIDA;
-                break;
+
+            else{
+                movJugador.tipoEntidad = 'J';
+                movJugador.id_entidad = 0;
+                movJugador.direccion = dirJ;
+                movJugador.pasos = dadoJ;
+
+                aColar(estado->colaMovimientos, &movJugador, sizeof(tMovimiento));
+                jugadorSeMovio = 1;
             }
-
-            movJugador.tipoEntidad = 'J';
-            movJugador.id_entidad = 0;
-            movJugador.direccion = dirJ;
-            movJugador.pasos = dadoJ;
-
-            aColar(estado->colaMovimientos, &movJugador, sizeof(tMovimiento));
-            jugadorSeMovio = 1;
         }
 
         buscador = *(estado->tablero);
@@ -579,9 +576,11 @@ int guardarPartida(tEstadoJuego* juegoActual,const char* nomArch)
 
 int actualizarJugador(tEstadoJuego* estado,const char* nomArch)
 {
+    FILE* pf;
+
     estado->jugador.partidasJugadas++;
 
-    FILE* pf = fopen(nomArch, "r+b");
+    pf = fopen(nomArch, "r+b");
     if (!pf)
         return ERROR_ARCHIVO;
 

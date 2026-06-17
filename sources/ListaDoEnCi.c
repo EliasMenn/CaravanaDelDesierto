@@ -245,7 +245,6 @@ void VaciarListaDobCirc(tListaDobCirc *pLista)
 ///Recorrer
 void recorrerListaDobCirc(tListaDobCirc* pLista,void accion(const void*, void*), void* contexto)
 {
-
     tNodoDob* fin=(*pLista)->ant;
     while(*pLista!=fin)
     {
