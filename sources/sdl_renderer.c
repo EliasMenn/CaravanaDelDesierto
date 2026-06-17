@@ -333,6 +333,10 @@ static void dibujarLetra(SDL_Renderer* r, int cx, int cy, char letra, SDL_Color 
 static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
                               int x, int y, char tipo, int numero,
                               char terrenoBajo) {
+                                  int iconCX,iconCY;
+                                  char numStr[8];
+                                  char letraStr[3] = {tipo, '\0', '\0'};
+
     SDL_Color bg  = bgColor(tipo);
     SDL_Color brd = borderColor(tipo);
 
@@ -343,14 +347,13 @@ static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
     drawRect(r, x, y, CELL_W, CELL_H, brd);
 
     /* numero arriba */
-    char numStr[8];
     SDL_snprintf(numStr, sizeof(numStr), "%02d", numero);
     SDL_Color dimCol = (SDL_Color){100, 90, 80, 255};
     drawText(r, fCell, numStr, x + CELL_W/2, y + 10, dimCol, 1);
 
     /* icono centrado */
-    int iconCX = x + CELL_W/2;
-    int iconCY = y + CELL_H/2 - 4;
+     iconCX = x + CELL_W/2;
+     iconCY = y + CELL_H/2 - 4;
 
     switch(tipo) {
         case 'J': dibujarCarruaje(r, iconCX, iconCY);  break;
@@ -369,7 +372,7 @@ static void dibujarCasillero(SDL_Renderer* r, TTF_Font* fCell,
     }
 
     /* letra identificadora abajo */
-    char letraStr[3] = {tipo, '\0', '\0'};
+
     SDL_Color letraCol;
     switch(tipo) {
         case 'J': letraCol = (SDL_Color){232,212,139,255}; break;
@@ -491,6 +494,10 @@ void sdl_renderizarCasilleroIndividual(tSDLCtx* ctx, char tipo, int idx,
 
 void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
                         int puntos, int turnos, int protegido, int perdioTurno) {
+                            int cardW, cardH, gap, totalW, startX, cardY, cx, v;
+                            const char* labels[4] = {"JUGADOR", "VIDAS", "PUNTOS", "TURNO"};
+                            char valStr[64];
+
     SDL_Color hudBg     = (SDL_Color)COL_HUD_BG;
     SDL_Color hudBorder = (SDL_Color)COL_HUD_BORDER;
     SDL_Color textoCol  = (SDL_Color)COL_TEXTO;
@@ -502,15 +509,15 @@ void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
     fillRect(ctx->renderer, 0, HUD_Y, VENTANA_W, VENTANA_H - HUD_Y, hudBg);
     drawLine(ctx->renderer, 0, HUD_Y, VENTANA_W, HUD_Y, hudBorder);
 
-    int cardW = 280, cardH = 80, gap = 20;
-    int totalW = 4*cardW + 3*gap;
-    int startX = (VENTANA_W - totalW) / 2;
-    int cardY  = HUD_Y + 20;
+    cardW = 280, cardH = 80, gap = 20;
+    totalW = 4*cardW + 3*gap;
+    startX = (VENTANA_W - totalW) / 2;
+    cardY  = HUD_Y + 20;
 
-    const char* labels[4] = {"JUGADOR", "VIDAS", "PUNTOS", "TURNO"};
+
 
     for (int i = 0; i < 4; i++) {
-        int cx = startX + i*(cardW+gap);
+        cx = startX + i*(cardW+gap);
         fillRect(ctx->renderer, cx, cardY, cardW, cardH,
                  (SDL_Color){13,17,23,255});
         drawRect(ctx->renderer, cx, cardY, cardW, cardH,
@@ -521,7 +528,6 @@ void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
                  cx + cardW/2, cardY + 18, verdeCla, 1);
 
         /* valor */
-        char valStr[64];
         SDL_Color valCol = textoCol;
         switch(i) {
             case 0:
@@ -530,7 +536,7 @@ void sdl_renderizarHUD(tSDLCtx* ctx, const char* nombre, int vidas,
                 break;
             case 1: {
                 valStr[0] = '\0';
-                for (int v = 0; v < vidas && v < 10; v++)
+                for (v = 0; v < vidas && v < 10; v++)
                     SDL_strlcat(valStr, "\xe2\x9d\xa4 ", sizeof(valStr));
                 valCol = rojo;
                 break;
