@@ -427,59 +427,63 @@ void bucleJuego(tEstadoJuego* estado, tConfig* config, tSDLCtx* ctx)
 
             dirJ = sdl_esperarDireccion(ctx); // Al elegir flecha, el cartel se apaga solo
 
-            if (dirJ == 'Q') {
+            if (dirJ == 'Q')
+                {
                 finPartida = TERMINO_PARTIDA;
-                break;
-            }
+                }
+            else
+                {
+                movJugador.tipoEntidad = 'J';
+                movJugador.id_entidad = 0;
+                movJugador.direccion = dirJ;
+                movJugador.pasos = dadoJ;
 
-            movJugador.tipoEntidad = 'J';
-            movJugador.id_entidad = 0;
-            movJugador.direccion = dirJ;
-            movJugador.pasos = dadoJ;
-
-            aColar(estado->colaMovimientos, &movJugador, sizeof(tMovimiento));
-            jugadorSeMovio = 1;
+                aColar(estado->colaMovimientos, &movJugador, sizeof(tMovimiento));
+                jugadorSeMovio = 1;
+                }
         }
-
-        buscador = *(estado->tablero);
-        indiceCasillero = 0;
-        do {
-            if (*(char*)(buscador->info) == 'J') pos.posJugador = indiceCasillero;
-            buscador = buscador->sig;
-            indiceCasillero++;
-        } while (buscador != *(estado->tablero));
-
-        calcularMovimientos(&pos, estado->colaMovimientos);
-
-        while (colaVacia(estado->colaMovimientos) == COLA_NO_VACIA)
+        if(!finPartida)
         {
-            outCola(estado->colaMovimientos, &movActual, sizeof(tMovimiento));
-            aplicarMovimientoTablero(estado, &movActual, &pos);
+            buscador = *(estado->tablero);
+            indiceCasillero = 0;
+            do {
+                if (*(char*)(buscador->info) == 'J') pos.posJugador = indiceCasillero;
+                buscador = buscador->sig;
+                indiceCasillero++;
+            } while (buscador != *(estado->tablero));
 
-            if (movActual.tipoEntidad == 'J') {
-                registrarMovimientoHistorial(estado, movActual.direccion, movActual.pasos);
-                estado->turnosJugados++;
+            calcularMovimientos(&pos, estado->colaMovimientos);
+
+            while (colaVacia(estado->colaMovimientos) == COLA_NO_VACIA)
+            {
+                outCola(estado->colaMovimientos, &movActual, sizeof(tMovimiento));
+                aplicarMovimientoTablero(estado, &movActual, &pos);
+
+                if (movActual.tipoEntidad == 'J') {
+                    registrarMovimientoHistorial(estado, movActual.direccion, movActual.pasos);
+                    estado->turnosJugados++;
+                }
             }
-        }
-        sincronizarBandidosApilados(estado, &pos);
+            sincronizarBandidosApilados(estado, &pos);
 
-        // Acá evalúa todo y arma los carteles si pasó algo
-        finPartida = verificarEstadoTurno(estado, jugadorSeMovio, &pos, ctx);
+            // Acá evalúa todo y arma los carteles si pasó algo
+            finPartida = verificarEstadoTurno(estado, jugadorSeMovio, &pos, ctx);
 
-        // Actualizamos para que se vea el movimiento del tablero + el cartel nuevo
-        sdl_limpiar(ctx);
-        mostrarTablero(estado, &pos, ctx);
-        sdl_renderizarOverlayEvento(ctx);
-        sdl_presentar(ctx);
+            // Actualizamos para que se vea el movimiento del tablero + el cartel nuevo
+            sdl_limpiar(ctx);
+            mostrarTablero(estado, &pos, ctx);
+            sdl_renderizarOverlayEvento(ctx);
+            sdl_presentar(ctx);
 
-        if (finPartida == SIGUE_PARTIDA)
-        {
-            // Si el jugador no se movió, significa que estuvo inmovilizado
-            // Le damos mucho más tiempo de pausa para que lea el cartel y vea qué hicieron los enemigos.
-            if (jugadorSeMovio == 0) {
-                SDL_Delay(2500); // 2.5 segundos
-            } else {
-                SDL_Delay(800);  // Turno normal
+            if (finPartida == SIGUE_PARTIDA)
+            {
+                // Si el jugador no se movió, significa que estuvo inmovilizado
+                // Le damos mucho más tiempo de pausa para que lea el cartel y vea qué hicieron los enemigos.
+                if (jugadorSeMovio == 0) {
+                    SDL_Delay(2500); // 2.5 segundos
+                } else {
+                    SDL_Delay(800);  // Turno normal
+                }
             }
         }
     }
